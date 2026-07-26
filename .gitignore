@@ -10,3 +10,7 @@ proposal/build/_*.hwpx
 **/__pycache__/
 *.pyc
 .venv/
+
+# 미리보기 중간 산출물(대용량)
+proposal/build/*.html
+proposal/build/_*

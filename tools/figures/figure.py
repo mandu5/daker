@@ -88,7 +88,8 @@ def render(body_html: str, out_png: str, *, width=590, extra_css="", scale=3,
             "--default-background-color=FFFFFFFF",
             f"--force-device-scale-factor={scale}",
             "--virtual-time-budget=20000",
-            f"--window-size={width},400",
+            # 창 높이가 콘텐츠보다 낮으면 아래가 잘린다. 넉넉히 잡고 _trim 으로 정리.
+            f"--window-size={width},2400",
             f"--screenshot={out_png}", f"file://{tmp}",
         ], capture_output=True, timeout=timeout)
     finally:

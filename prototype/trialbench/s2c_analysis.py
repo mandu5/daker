@@ -31,6 +31,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from flags import FLAG_NAMES, RATIONALE, HERG_CLOGP_CUT  # noqa: E402
 from load import CLAUSE_PATTERNS, DEFAULT_ROOT, build_dataset  # noqa: E402
+from mechanism import (  # noqa: E402
+    PREREGISTERED, CLAUSE_CAVEATS, EXCLUDED_FROM_CLAIMS, NO_MECHANISM_CLAIM,
+    classify_pair, mechanism_of,
+)
 
 CLAUSES = list(CLAUSE_PATTERNS.keys())
 
@@ -239,6 +243,8 @@ def main():
         ro, rn = idx_o.get(key), idx_n.get(key)
         lo = ro["lift"] if ro else float("nan")
         ln = rn["lift"] if rn else float("nan")
+        # 층화 결과를 원본 레코드에도 붙여 기전 게이트에서 참조할 수 있게 한다
+        r["lift_onc"], r["lift_non"] = lo, ln
         # 층화 후에도 양쪽 모두에서 방향이 유지되는가
         keep = (ro and rn and ro["lift"] > 1.05 and rn["lift"] > 1.05)
         verdict = "채택" if keep else "층화 후 약화/소멸"
@@ -254,6 +260,52 @@ def main():
     print(f"  층화 후 무너진 것: {len(collapsed)}")
     print(f"  채택률: {len(survivors)}/{n_tested} = "
           f"{len(survivors) / n_tested:.1%}" if n_tested else "")
+
+    # ── 사전 선언 기전 게이트 ─────────────────────────────────
+    # 통계적 유의성만으로는 "골라 썼다"는 비판을 방어할 수 없다.
+    # 결과를 보기 전에 선언한 기전 가설과 대조한다.
+    sig_strat = {(r["flag"], r["clause"]) for r in survivors}
+    sig_stats = {(r["flag"], r["clause"]) for r in all_rows
+                 if r.get("sig_bonferroni") and r["lift"] > 1.0}
+    buckets = {"confirmatory": [], "refuted": [], "exploratory": [],
+               "no_mechanism_claim": [], "excluded_clause": [], "null": []}
+    for r in all_rows:
+        key = (r["flag"], r["clause"])
+        kind = classify_pair(r["flag"], r["clause"],
+                             key in sig_stats, key in sig_strat)
+        r["mechanism_class"] = kind
+        r["mechanism"] = mechanism_of(*key)
+        buckets[kind].append(r)
+
+    # 사전 선언했으나 검정에서 제외된(희소 조항 등) 쌍도 refuted 로 집계된다
+    print("\n[사전 선언 기전 게이트]")
+    print(f"  사전 선언한 (플래그→조항) 쌍: {len(PREREGISTERED)}")
+    conf = sorted(buckets["confirmatory"], key=lambda r: -r["lift"])
+    print(f"  ├ confirmatory (선언 + 통계 + 층화 통과): {len(conf)}  "
+          f"→ 가치 주장에 사용")
+    for r in conf:
+        print(f"  │   {r['flag']:22s} → {r['clause']:11s} lift={r['lift']:.2f} "
+              f"(종양 {r.get('lift_onc', float('nan')):.2f} / "
+              f"비종양 {r.get('lift_non', float('nan')):.2f})")
+    print(f"  ├ refuted (선언했으나 통과 실패): {len(buckets['refuted'])}  "
+          f"→ 실패로 보고")
+    for r in sorted(buckets["refuted"], key=lambda r: -r["lift"])[:14]:
+        print(f"  │   {r['flag']:22s} → {r['clause']:11s} lift={r['lift']:.2f} "
+              f"p={r['p_value']:.1e}")
+    expl = sorted(buckets["exploratory"], key=lambda r: -r["lift"])
+    print(f"  ├ exploratory (선언 안 했으나 유의): {len(expl)}  "
+          f"→ 보고만, 기전 주장 안 함")
+    for r in expl[:10]:
+        print(f"  │   {r['flag']:22s} → {r['clause']:11s} lift={r['lift']:.2f}")
+    print(f"  ├ 기전 주장 금지 플래그(PAINS) 관련: "
+          f"{len(buckets['no_mechanism_claim'])}")
+    print(f"  └ 관례적 조항으로 주장 제외(피임): "
+          f"{len(buckets['excluded_clause'])}")
+
+    pre_tested = len(conf) + len(buckets["refuted"])
+    if pre_tested:
+        print(f"\n  사전 선언 쌍의 확증률: {len(conf)}/{pre_tested} = "
+              f"{len(conf) / pre_tested:.1%}")
 
     os.makedirs(args.out, exist_ok=True)
     payload = {
@@ -274,6 +326,19 @@ def main():
         "survivors": survivors,
         "collapsed": collapsed,
         "rule_adoption_rate": (len(survivors) / n_tested) if n_tested else None,
+        "preregistered_pairs": {f"{k[0]}->{k[1]}": v
+                                for k, v in PREREGISTERED.items()},
+        "clause_caveats": CLAUSE_CAVEATS,
+        "excluded_from_claims": sorted(EXCLUDED_FROM_CLAIMS),
+        "no_mechanism_claim": NO_MECHANISM_CLAIM,
+        "mechanism_gate": {k: [{"flag": r["flag"], "clause": r["clause"],
+                                "lift": r["lift"], "p_value": r["p_value"],
+                                "lift_onc": r.get("lift_onc"),
+                                "lift_non": r.get("lift_non"),
+                                "mechanism": r.get("mechanism")}
+                               for r in v]
+                           for k, v in buckets.items()},
+        "confirmatory_rate": (len(conf) / pre_tested) if pre_tested else None,
     }
     path = os.path.join(args.out, "s2c_associations.json")
     with open(path, "w", encoding="utf-8") as f:

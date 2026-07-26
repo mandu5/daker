@@ -1,0 +1,12 @@
+# 대용량 폰트는 tools/fetch_fonts.sh 로 내려받는다
+assets/fonts/*.ttf
+assets/fonts/*.otf
+
+# 빌드 산출물 (중간 파일)
+proposal/build/_*.html
+proposal/build/_*.pdf
+proposal/build/_*.png
+proposal/build/_*.hwpx
+**/__pycache__/
+*.pyc
+.venv/

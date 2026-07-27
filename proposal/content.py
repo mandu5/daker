@@ -518,7 +518,7 @@ def blocks():
             "[5] FDA. Considerations for the Use of AI to Support Regulatory "
             "Decision-Making for Drug and Biological Products. Draft Guidance 2025-01 · "
             "[6] 식품의약품안전처. 의약품 개발 시 AI 활용 안내서 / 2026년 주요업무 추진계획 · "
-            "[7] 한국보건산업진흥원. 국내 신약개발 임상단계별 성공률 분석 · "
+            "[7] 한국보건산업진흥원 제약산업정보포털. 미국내 임상성공률 10년간 7.9%, 30%가 2상에서 중단 (한국바이오협회·Biomedtracker 2011-2020 분석 재인용) · "
             "[8] Schrag et al. CiteME. arXiv:2407.12861 · "
             "[9] Schmidgall et al. AgentClinic. arXiv:2405.07960~~"},
 

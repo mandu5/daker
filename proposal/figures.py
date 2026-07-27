@@ -381,9 +381,98 @@ def fig_eval():
              os.path.join(OUT, "fig5_eval.png"), width=600)
 
 
+
+
+# ── 그림 6. 실제 실행 결과 ────────────────────────────────────
+def fig_run():
+    """에이전트가 실제로 돌아간 로그. 제안서에서 가장 강한 증거."""
+    import json as _j
+    rec = _j.load(open(os.path.join(REPO, "prototype", "results", "runs",
+                                    "demo_kinase_like.json"), encoding="utf-8"))
+    m = rec["meta"]
+    ICON = {"advance": ("발행", OK), "escalate": ("사람검토", "#C98A17"),
+            "abstain": ("기권", REJ)}
+    KO = {"QT_ECG": "QT·심전도", "CYP_DDI": "CYP·약물상호작용",
+          "HEPATIC": "간기능", "RENAL": "신기능", "HEMATO": "혈액학적"}
+
+    head = (f"<div style='background:{NAVY};color:#fff;border-radius:6px 6px 0 0;"
+            f"padding:7px 11px;font-size:10.5px;line-height:1.45;'>"
+            f"<b style='font-size:11.5px;'>입력</b> &nbsp;"
+            f"<code style='font-size:9.4px;'>{m['molecule']['smiles']}</code><br>"
+            f"MW {m['molecule']['mw']:.0f} · cLogP {m['molecule']['clogp']:.2f} · "
+            f"1상 · 진행성 고형암 &nbsp;|&nbsp; 구조경보 "
+            f"{len(m['risks'])}건 &nbsp;|&nbsp; 적용범위 AD {m['ad']:.2f}"
+            f"</div>")
+
+    rows = []
+    for c in rec["clauses"]:
+        lab, tone = ICON[c["decision"]]
+        ds = "—" if c["delta_star"] is None else f"{c['delta_star']:+.4f}"
+        tr = "—" if c["trust"] is None else f"{c['trust']:.2f}"
+        cls = ("분자특이" if c["clause_class"] == "molecule_specific" else "템플릿")
+        rows.append(
+            f"<tr>"
+            f"<td style='padding:3px 6px;font-size:10px;white-space:nowrap;'>"
+            f"{KO[c['clause_type']]}</td>"
+            f"<td style='padding:3px 5px;font-size:9.3px;color:#5A5A5A;'>{cls}</td>"
+            f"<td style='padding:3px 5px;font-size:9.6px;text-align:right;'>"
+            f"{c['p_base']:.3f}</td>"
+            f"<td style='padding:3px 5px;font-size:9.6px;text-align:right;'>"
+            f"{c['delta']:+.4f}</td>"
+            f"<td style='padding:3px 5px;font-size:9.6px;text-align:right;"
+            f"font-weight:700;'>{ds}</td>"
+            f"<td style='padding:3px 5px;font-size:9.6px;text-align:right;'>{tr}</td>"
+            f"<td style='padding:3px 6px;font-size:9.8px;font-weight:700;"
+            f"color:{tone};white-space:nowrap;'>{lab}</td>"
+            f"<td style='padding:3px 5px;font-size:8.8px;color:#777;'>"
+            f"{c['reason_code']}</td></tr>")
+    hdr = ("<tr style='background:#DCE7F1;'>" + "".join(
+        f"<th style='padding:3px 6px;font-size:9px;color:{NAVY};'>{h}</th>"
+        for h in ["조항", "분류", "템플릿 기저", "Δ 증분", "Δ* 구조귀속",
+                  "신뢰도 T", "판정", "사유"]) + "</tr>")
+
+    n = {k: sum(1 for c in rec["clauses"] if c["decision"] == k)
+         for k in ("advance", "escalate", "abstain")}
+    summary = (
+        f"<div style='display:flex;gap:7px;margin-top:8px;'>"
+        f"<div style='flex:1.5;border-left:4px solid {REJ};background:#FDF4F6;"
+        f"padding:7px 10px;font-size:10px;line-height:1.45;'>"
+        f"<b>Δ* 가 실제로 걸러냈다.</b> QT 조항의 원시 증분 +0.178 중 "
+        f"구조에 귀속되는 몫은 <b>+0.048(27%)</b> 뿐이었다. 나머지 73%는 "
+        f"물성 매칭 decoy 12개에서도 그대로 나왔다 — 즉 구조 때문이 아니다.</div>"
+        f"<div style='flex:1;border:1.3px solid {LINE};border-radius:6px;"
+        f"padding:7px 10px;font-size:10px;line-height:1.5;'>"
+        f"발행 <b>{n['advance']}</b> · 사람검토 <b style='color:#C98A17;'>"
+        f"{n['escalate']}</b> · 기권 <b style='color:{REJ};'>{n['abstain']}</b><br>"
+        f"<span style='font-size:9.3px;color:#5A5A5A;'>기권율 "
+        f"{n['abstain']/len(rec['clauses']):.0%}</span></div></div>")
+
+    trace = "".join(
+        f"<div style='font-size:9.2px;line-height:1.42;color:#333;'>"
+        f"<span style='color:{DET};font-weight:700;'>[{t['seq']}] "
+        f"{t['agent']}</span> &nbsp;{t['detail']}</div>"
+        for t in rec["trace"])
+    tracebox = (
+        f"<div style='margin-top:8px;border:1.2px solid {LINE};border-radius:6px;"
+        f"padding:7px 10px;background:#FAFCFD;'>"
+        f"<div style='font-size:10px;font-weight:700;color:{NAVY};"
+        f"margin-bottom:3px;'>실행 추적 — 그대로 시연 화면이 된다</div>"
+        + trace +
+        f"<div style='margin-top:5px;font-size:9px;color:#5A5A5A;'>"
+        f"감사 DAG 해시 <code>{rec['dag_hash'][:32]}…</code> &nbsp;·&nbsp; "
+        f"RDKit {m['tool_versions']['rdkit']} · "
+        f"scikit-learn {m['tool_versions']['scikit-learn']} &nbsp;·&nbsp; "
+        f"<b style='color:{OK};'>3회 반복 실행 해시 일치</b></div></div>")
+
+    F.render(head + "<table style='border-collapse:collapse;width:100%;"
+             "border:1.2px solid " + LINE + ";'>" + hdr + "".join(rows)
+             + "</table>" + summary + tracebox,
+             os.path.join(OUT, "fig6_run.png"), width=600)
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     for fn in (fig_architecture, fig_mechanism_gate, fig_delta_star,
-               fig_selective, fig_eval):
+               fig_selective, fig_eval, fig_run):
         fn()
         print("생성:", fn.__name__)

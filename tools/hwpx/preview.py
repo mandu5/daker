@@ -79,6 +79,7 @@ body{font-family:'NotoKR','Noto Sans KR',sans-serif;font-size:13pt;line-height:1
 p{margin:0 0 0.8mm 0;}
 p.body{margin:0 0 0.81mm 0;}
 p.tight{margin:0 0 0.32mm 0;}
+p.fine{font-size:9pt;line-height:1.32;color:%(GRAY)s;margin:0 0 0.4mm 0;}
 h1.band{background:%(NAVY)s;color:#fff;font-size:14pt;font-weight:700;
         padding:1.7mm 3.2mm;margin:0 0 2.0mm 0;border-radius:0.6mm;
         break-after:avoid;line-height:1.30;}
@@ -124,6 +125,8 @@ def render_html(blocks, *, title="제안서 미리보기") -> str:
         elif t == "p":
             cls = "tight" if b.get("tight") else "body"
             out.append(f'<p class="{cls}">{inline(b["text"])}</p>')
+        elif t == "fine":
+            out.append(f'<p class="fine">{inline(b["text"])}</p>')
         elif t == "ul":
             lis = "".join(f"<li>{inline(i)}</li>" for i in b["items"])
             out.append(f"<ul>{lis}</ul>")

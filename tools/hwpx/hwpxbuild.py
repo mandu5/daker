@@ -307,6 +307,10 @@ class Builder:
                 self.h3(b["text"])
             elif t == "p":
                 self.p(b["text"], tight=b.get("tight", False))
+            elif t == "fine":
+                # 참고문헌·주석용 작은 서체. 본문 13pt 를 그대로 쓰면 지면 낭비다.
+                self.text_para(PP_TIGHT, b["text"], cp=CP_CAPTION,
+                               cp_b=CP_CAPTION, cp_a=CP_CAPTION)
             elif t == "ul":
                 self.ul(b["items"], b.get("level", 1), tight=b.get("tight", False))
             elif t == "table":

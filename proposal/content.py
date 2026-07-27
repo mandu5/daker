@@ -23,6 +23,7 @@ AGENT_EN = "INKLINE"
 
 
 E1 = os.path.join(REPO, "prototype", "results", "e1_safe_inc.json")
+E3 = os.path.join(REPO, "prototype", "results", "e3_null.json")
 
 
 def _r():
@@ -33,6 +34,10 @@ def _e1():
     return json.load(open(E1, encoding="utf-8"))
 
 
+def _e3():
+    return json.load(open(E3, encoding="utf-8"))
+
+
 def fig(name, width_mm=150.0, caption=None):
     return {"type": "img", "path": os.path.join(FIG, name),
             "width_mm": width_mm, "caption": caption}
@@ -41,6 +46,7 @@ def fig(name, width_mm=150.0, caption=None):
 def blocks():
     R = _r()
     E = _e1()
+    N = _e3()
     n_trials = R["n_analyzed"]
     conf = sorted(R["mechanism_gate"]["confirmatory"], key=lambda r: -r["lift"])
     cls = R["clause_classification"]
@@ -87,10 +93,11 @@ def blocks():
             f"{E['clauses']['CYP_DDI']['delta_p_at_coverage']['INKLINE+']['0.05']:+.3f})되고 "
             "간·신기능 조항에서는 구조가 기여하지 않았다.__ 그대로 적는다."},
         {"type": "callout", "title": "그래서 이 시스템이 필요하다.",
-         "text": "구조 경보를 그대로 조항으로 번역하는 순진한 규칙 엔진은 템플릿보다 "
-                 f"**오히려 나빴다**(ΔAUPRC "
-                 f"{E['mean_delta_auprc']['B-RULE']:+.3f}). 기권 기제는 장식이 아니라 "
-                 "데이터가 요구하는 설계다."},
+         "text": "구조 경보를 그대로 조항으로 번역하는 규칙 엔진은 템플릿보다 "
+                 f"**오히려 나빴다**(ΔAUPRC {E['mean_delta_auprc']['B-RULE']:+.3f}). "
+                 f"주지표 FOR_safety는 __{N['FOR_safety']['rate']:.2%}__(목표 2% 이하) "
+                 f"통과, 확증 경보 없는 {N['negative_control']['n']:,}쌍의 발행은 "
+                 "**0건**이었다."},
     ]
 
     # 1쪽 실측 표
@@ -185,9 +192,14 @@ def blocks():
         {"type": "p", "tight": True, "text":
             "\"그 조항은 어차피 템플릿에 있는 것 아닌가\"가 이 아이디어에 대한 가장 강한 반론이다. "
             "먹줄은 그 반론을 **기계적으로 자기 자신에게 적용**한다."},
-        fig("fig3_delta_star.png", 126.0,
-            "Δ*는 구조 경보를 제거한 대조 분자에서도 나오는 몫을 빼낸, 순수하게 구조에 귀속되는 "
-            "증분이다. Δ*≤0이면 시스템이 스스로 그 조항을 기각한다."),
+        {"type": "p", "tight": True, "text":
+            "**Δ\*(c) = Δ(c) − max(0, 평균 Δ(decoy))**. MW·cLogP·TPSA·HBD·고리수는 매칭하고 "
+            "**지목한 구조 경보만 파괴한** 대조 분자를 RDKit RWMol로 만들어, 거기서도 나오는 "
+            "몫을 빼낸다. 남은 것이 **순수하게 구조에 귀속되는 증분**이며 __Δ*≤0이면 시스템이 "
+            "스스로 기각한다.__ 시연 분자에서 QT 조항 원시 증분 +0.178 중 구조 귀속분은 "
+            "+0.048(27%)뿐이었다. ~~decoy는 정답이 아니라 음성 대조군이다. 정답은 실제 "
+            "프로토콜 원문이다. 물성 기반 경보(cLogP≥3.7)는 물성 그 자체라 절제할 수 없어 "
+            "귀속 판정을 보류한다.~~"},
         {"type": "h2", "text": "무엇이 새로운가 ② — 기권을 산출물로 삼는 발행 규칙"},
         {"type": "p", "tight": True, "text":
             "신뢰도 **T(c) = Δ*(c) / (σ(c)+ε) × AD(m)** 로 3분기한다. "
@@ -291,9 +303,18 @@ def blocks():
                  f"**나빴다**(ΔAUPRC {E['mean_delta_auprc']['B-RULE']:+.3f}). "
                  "경보를 조항으로 직역하면 해롭다. __선택적 발행과 기권은 취향이 아니라 "
                  "데이터가 강제한 설계다.__"},
+        {"type": "h2", "text": "E3 NULL — 기권·오판·자기수정 실측"},
+        fig("fig7_selfcorrect.png", 140.0,
+            "되돌아가는 화살표가 실제로 돈 로그와 E3 지표. 주장 범위를 신뢰구간이 1을 "
+            "넘지 않는 CYP·DDI로 좁히고, QT는 측정치만 보고한다."),
         {"type": "h2", "text": "사전 선언 기전 게이트"},
-        fig("fig2_mechanism_gate.png", 132.0,
-            "확증 5·기각 10. 실패를 감추지 않는 것이 이 평가 체계의 핵심이다."),
+        {"type": "p", "tight": True, "text":
+            f"사전 선언 18쌍 중 **확증 {len(conf)} · 기각 10**(확증률 33.3%). 확증 5쌍은 "
+            "1쪽 표에 있다. 기각 중 **방향이 반대로 유의**한 것이 둘이다 — 티오펜→간기능 "
+            "**lift 0.57**(p=8.9e-28), 마이클 수용체→간기능 0.84(p=5.3e-15). "
+            "__티오펜의 반응성 대사체→간독성은 의약화학 교과서적 경보인데 실제 프로토콜 "
+            "4만 건에서는 반대로 나왔다.__ 검증 없이 구조 경보를 조항으로 번역하면 안 된다는 "
+            "우리 설계의 직접 근거다."},
         {"type": "h2", "text": "왜 이 설계인가"},
         {"type": "p", "text":
             "구조 플래그 15종 × 조항 8종을 전수 검정하면 다중검정 보정 후에도 기전으로 설명되지 "
@@ -428,8 +449,7 @@ def blocks():
     # ══ 8. 파급효과 ══════════════════════════════════════════
     b += [
         {"type": "h1", "no": "8", "text": "에이전트 도입에 따른 파급효과"},
-        {"type": "h2", "text": "무엇을 주장하고, 무엇을 주장하지 않는가"},
-        {"type": "p", "text":
+        {"type": "p", "tight": True, "text":
             "프로토콜 수정 1건의 직접비는 2상 US$141,000, 3상 US$535,000이다. 그러나 "
             "**이 금액을 우리 절감액으로 청구하지 않는다.** 수정 유발 요인에는 모집 난항·"
             "신규 안전성 정보·규제기관 요청이 포함되며 구조에서 연역되지 않는다. "
@@ -438,10 +458,14 @@ def blocks():
          "header": ["효과", "근거 유형", "내용"],
          "rows": [
              ["검토 대상 축소", "**실측**",
-              "조항의 절반 이상이 템플릿임을 데이터로 분리 → RA 담당자가 "
-              "**분자 특이 조항에만 집중**"],
-             ["누락 조항 조기 발견", "실측 기반",
-              "확증 5쌍 기준, CYP·DDI 조항에서 템플릿 대비 lift 1.8"],
+              f"기권율 {N['decision_mix']['abstain']['rate']:.0%}. 대부분이 템플릿임을 "
+              "데이터로 분리해 **분자 특이 조항에만 집중**하게 한다"],
+             ["누락 조항 조기 발견", "**실측**",
+              f"CYP·DDI 발행분 정밀도 lift "
+              f"**{N['by_clause']['CYP_DDI']['precision_lift']:.2f}배** "
+              f"[{N['by_clause']['CYP_DDI']['lift_ci'][0]:.2f},"
+              f"{N['by_clause']['CYP_DDI']['lift_ci'][1]:.2f}]. "
+              "QT는 신뢰구간이 1을 포함해 **주장하지 않음**"],
              ["검토 시간", "~~추정~~",
               "~~조항 200~400개 × 3분 = 10~20시간/라운드(산출식 공개). 본선 사용자 "
               "스터디로 실측 대체. IND 보완은 사유별 공개 통계가 없어 발생률을 "
@@ -451,14 +475,15 @@ def blocks():
          "head_h": 780},
         {"type": "p", "tight": True, "text":
             "**도입 경로** — 1단계 기존 프로토콜 검수(사후 진단) → 2단계 초안 작성 시 조항 "
-            "제안(사전 설계) → 3단계 규제기관 제출 패키지에 COU 카드·감사 DAG 첨부. "
-            "1단계는 폐쇄망에서 즉시 가능하며 국내 중소 바이오텍의 실제 진입점이다."},
+            "제안 → 3단계 제출 패키지에 COU 카드·감사 DAG 첨부. 1단계는 폐쇄망에서 즉시 "
+            "가능하며 국내 중소 바이오텍의 실제 진입점이다."},
         {"type": "p", "tight": True, "text":
             "**산업 경쟁력 기여는 방법론이다.** 비결정적 멀티에이전트를 규제 환경에서 쓰려면 "
-            "COU 정의와 재현성 입증이 필요한데 현재 그 방법이 없다. 먹줄의 **조항 단위 COU 카드와 "
-            "감사 DAG 해시**는 다른 규제과학 에이전트에 그대로 이식 가능한 형식이다."},
-        {"type": "h2", "text": "참고문헌 (URL 접속으로 실재 확인, 확인일 2026-07-26)"},
-        {"type": "p", "tight": True, "text":
+            "COU 정의와 재현성 입증이 필요한데 현재 그 방법이 없다. 먹줄의 **조항 단위 COU "
+            "카드와 감사 DAG 해시**는 다른 규제과학 에이전트에 그대로 이식 가능한 형식이다."},
+        {"type": "fine", "text":
+            "참고문헌 (URL 접속으로 실재 확인, 확인일 2026-07-26)"},
+        {"type": "fine", "text":
             "~~[1] Getz et al. The Impact of Protocol Amendments on Clinical Trial "
             "Performance and Cost. Ther Innov Regul Sci. doi 10.1177/2168479016632271 · "
             "[2] Chen et al. TrialBench: Multi-Modal AI-Ready Datasets for Clinical Trial "

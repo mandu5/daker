@@ -470,9 +470,84 @@ def fig_run():
              os.path.join(OUT, "fig6_run.png"), width=600)
 
 
+
+# ── 그림 7. 자기수정 루프와 E3 실측 ──────────────────────────
+def fig_selfcorrect():
+    import json as _j
+    rec = _j.load(open(os.path.join(REPO, "prototype", "results", "runs",
+                                    "demo_selfcorrect.json"), encoding="utf-8"))
+    e3 = _j.load(open(os.path.join(REPO, "prototype", "results",
+                                   "e3_null.json"), encoding="utf-8"))
+    KEEP = {"라운드 1 시작", "조항 후보 기안", "R2 구조 귀속 검정",
+            "A2 리스크 등급 하향", "A4 계약 개정 요청", "라운드 2 시작",
+            "라운드 2 수렴", "R1 근거 반증"}
+    import re as _re
+    tr = [t for t in rec["trace"] if t["step"] in KEEP][:9]
+    for t in tr:   # 로그의 ** 강조 표기를 HTML 로 변환
+        t = t
+    def _b(x):
+        return _re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", x)
+    lines = "".join(
+        f"<div style='font-size:9.2px;line-height:1.45;color:#333;'>"
+        f"<span style='color:{REJ if t['step'].startswith(('A2','A4','R1','R2')) else DET};"
+        f"font-weight:700;'>{t['agent']}</span> "
+        f"<b>{t['step']}</b> &nbsp;{_b(t['detail'][:115])}</div>" for t in tr)
+
+    loop = (
+        f"<div style='border:1.3px solid {REJ};border-radius:6px;padding:8px 10px;"
+        f"background:#FDF4F6;'>"
+        f"<div style='font-size:11px;font-weight:700;color:{REJ};margin-bottom:4px;'>"
+        f"되돌아가는 화살표가 실제로 돈다 — 리도카인(NCT03562481) 실행 로그</div>"
+        + lines +
+        f"<div style='margin-top:5px;font-size:9.3px;color:{NAVY};'>"
+        f"라운드 1에서 경보가 기각·하향되자 <b>라운드 2에서 분자특이 조항이 "
+        f"1종→0종</b>으로 줄고 수렴했다. 기권율 100%가 감지되자 "
+        f"<b>임계를 낮추는 대신 사람에게 계약 개정을 요청</b>했다.</div></div>")
+
+    f = e3["FOR_safety"]
+    cyp = e3["by_clause"]["CYP_DDI"]
+    qt = e3["by_clause"]["QT_ECG"]
+    nc = e3["negative_control"]
+
+    def kpi(label, value, sub, tone):
+        return (f"<div style='flex:1;border:1.3px solid {tone};border-radius:6px;"
+                f"padding:7px 9px;'>"
+                f"<div style='font-size:9.3px;color:#5A5A5A;'>{label}</div>"
+                f"<div style='font-size:14px;font-weight:700;color:{tone};"
+                f"margin:1px 0;'>{value}</div>"
+                f"<div style='font-size:8.8px;color:#5A5A5A;line-height:1.35;'>"
+                f"{sub}</div></div>")
+
+    kpis = F.row([
+        kpi("주지표 FOR_safety", f"{f['rate']:.2%}",
+            f"목표 2% 이하 <b>통과</b><br>[{f['ci'][0]:.2%}, {f['ci'][1]:.2%}]", OK),
+        kpi("CYP·DDI 정밀도 lift", f"{cyp['precision_lift']:.2f}x",
+            f"[{cyp['lift_ci'][0]:.2f}, {cyp['lift_ci'][1]:.2f}]<br>"
+            f"<b>신뢰구간이 1을 넘지 않음</b>", OK),
+        kpi("QT·심전도 lift", f"{qt['precision_lift']:.2f}x",
+            f"[{qt['lift_ci'][0]:.2f}, {qt['lift_ci'][1]:.2f}]<br>"
+            f"<b>유의하지 않음 — 주장 안 함</b>", "#C98A17"),
+        kpi("음성 대조 발행률", f"{nc['advance_rate']:.4f}",
+            f"확증 경보 없는 {nc['n']:,}쌍<br>누출 0건", DET),
+    ], gap=6, style="margin-top:8px;")
+
+    note = (
+        f"<div style='margin-top:7px;border-left:4px solid {DET};background:{LIGHT};"
+        f"padding:7px 10px;font-size:9.8px;line-height:1.45;'>"
+        f"<b>집계 지표의 함정을 우리가 먼저 밝힌다.</b> 전체를 풀링한 "
+        f"'발행분 정밀도÷유병률'은 <b>0.91배</b>로 나와 시스템이 나쁜 것처럼 보인다. "
+        f"이는 <b>심슨의 역설</b>이다 — 조항별 기저율이 3배 넘게 차이나는데"
+        f"(간기능 0.385 vs CYP 0.101) 시스템은 기저율 높은 조항을 거의 발행하지 "
+        f"않기 때문이다. 그래서 <b>조항별 lift와 신뢰구간</b>을 주지표로 쓰고, "
+        f"발행 가중 집계는 {e3['weighted_precision_lift']:.2f}배다.</div>")
+
+    F.render(loop + kpis + note, os.path.join(OUT, "fig7_selfcorrect.png"),
+             width=600)
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     for fn in (fig_architecture, fig_mechanism_gate, fig_delta_star,
-               fig_selective, fig_eval, fig_run):
+               fig_selective, fig_eval, fig_run, fig_selfcorrect):
         fn()
         print("생성:", fn.__name__)

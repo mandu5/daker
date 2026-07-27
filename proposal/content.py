@@ -43,6 +43,14 @@ def fig(name, width_mm=150.0, caption=None):
             "width_mm": width_mm, "caption": caption}
 
 
+CLAUSE_KO_SHORT = {
+    "CYP_DDI": "CYP·약물상호작용", "GI_IRRITATION": "위장관 궤양 병력",
+    "QT_ECG": "QT·심전도", "FOOD_EFFECT": "음식·자몽 제한", "HEPATIC": "간기능",
+    "SEIZURE": "경련 병력", "THYROID": "갑상선", "RENAL": "신기능",
+    "HEMATO": "혈액학적", "GASTRIC_PH": "위산분비억제제 병용",
+}
+
+
 def blocks():
     R = _r()
     E = _e1()
@@ -84,14 +92,12 @@ def blocks():
             "__템플릿에 이미 있는 조항과 이 분자 때문에 필요한 조항을 데이터로 분리__하고, "
             "구조 귀속이 입증되지 않으면 **기권**하는 5-에이전트 규제과학 시스템이다."},
         {"type": "p", "tight": True, "text":
-            f"주장으로 끝내지 않았다. 실제 임상시험 **{n_trials:,}건**의 선정·제외기준 원문으로 "
-            "검정했고, **결과를 보기 전에 선언한** 기전 가설 18쌍 중 "
-            f"**{len(conf)}쌍만 확증**되고 10쌍이 기각됐다. 티오펜의 반응성 대사체→간독성 "
-            "가설은 **반대 방향으로** 유의했다(lift 0.57). 에이전트도 이미 돌아가며 "
-            "**3회 반복 실행 시 감사 DAG 해시가 일치**한다. 증분은 __CYP·약물상호작용에 "
-            f"집중(ΔP@5% "
-            f"{E['clauses']['CYP_DDI']['delta_p_at_coverage']['INKLINE+']['0.05']:+.3f})되고 "
-            "간·신기능 조항에서는 구조가 기여하지 않았다.__ 그대로 적는다."},
+            f"주장으로 끝내지 않았다. 실제 임상시험 **{n_trials:,}건**의 선정·제외기준 "
+            f"원문으로 검정했고, **결과를 보기 전에 선언한** 기전 가설 "
+            f"{len(R['preregistered_pairs'])}쌍 중 **{len(conf)}쌍만 확증**되고 "
+            f"{len(R['mechanism_gate']['refuted'])}쌍이 기각됐다. 티오펜의 반응성 "
+            "대사체→간독성은 **반대 방향으로** 유의했다(lift 0.57). 에이전트도 이미 "
+            "돌아가며 **3회 반복 실행 시 감사 DAG 해시가 일치**한다."},
         {"type": "callout", "title": "그래서 이 시스템이 필요하다.",
          "text": "구조 경보를 그대로 조항으로 번역하는 규칙 엔진은 템플릿보다 "
                  f"**오히려 나빴다**(ΔAUPRC {E['mean_delta_auprc']['B-RULE']:+.3f}). "
@@ -106,7 +112,9 @@ def blocks():
           "hydrazine": "하이드라진", "herg_pharmacophore": "hERG 약리단",
           "basic_amine": "염기성 아민"}
     KC = {"CYP_DDI": "CYP·약물상호작용", "HEPATIC": "간기능", "QT_ECG": "QT·심전도"}
-    for r in conf:
+    KO.update({"carboxylic_acid": "카복실산"})
+    KC.update({"FOOD_EFFECT": "음식·자몽 제한", "GI_IRRITATION": "위장관 궤양 병력"})
+    for r in conf[:6]:
         rows.append([KO.get(r["flag"], r["flag"]), KC.get(r["clause"], r["clause"]),
                      f"{r['lift']:.2f}", f"{r['lift_onc']:.2f} / {r['lift_non']:.2f}",
                      f"{r['p_value']:.0e}".replace("e-0", "e-")])
@@ -115,8 +123,10 @@ def blocks():
          "header": ["구조 경보", "프로토콜 조항", "lift", "종양 / 비종양", "Fisher p"],
          "rows": rows, "widths": [2.6, 2.6, 1.1, 1.9, 1.4],
          "align": ["l", "l", "c", "c", "c"], "row_h": 830, "head_h": 830,
-         "caption": f"확증된 5쌍. 적응증 층화 후에도 양쪽에서 방향이 유지된 것만 남겼다 "
-                    f"(실제 임상시험 {n_trials:,}건, 사전 선언 18쌍 중 확증률 33.3%)."},
+         "caption": f"확증 {len(conf)}쌍 중 상위 6. 적응증 층화 후에도 양쪽에서 방향이 "
+                    f"유지된 것만 남겼다 (실제 임상시험 {n_trials:,}건, 사전 선언 "
+                    f"{len(R['preregistered_pairs'])}쌍 중 확증률 "
+                    f"{R['confirmatory_rate']:.1%})."},
         {"type": "p", "tight": True, "text":
             "~~재현: prototype/trialbench/fetch.sh → s2c_analysis.py. 원자료는 TrialBench "
             "(Nature Sci Data 2025, ClinicalTrials.gov 기반 공개 데이터).~~"},
@@ -282,22 +292,27 @@ def blocks():
             f"NCT ID 해시 기준 결정론적 분할(학습 {E['n_train']:,} / 평가 {E['n_test']:,}). "
             "커버리지 5%에서 상위 조항만 발행했을 때의 정밀도를 템플릿 베이스라인과 비교했다."},
         {"type": "table",
-         "header": ["조항", "템플릿 P@5%", "먹줄 P@5%", "ΔP@5%", "ΔAUPRC", "판단"],
+         "header": ["기전 확증 조항", "기저율", "템플릿 P@5%", "먹줄 P@5%", "ΔP@5%"],
          "rows": [
-             [KC.get(c, c),
+             [CLAUSE_KO_SHORT[c], f"{E['clauses'][c]['base_rate_test']:.3f}",
               f"{E['clauses'][c]['precision_at_coverage']['B-TPL']['0.05']['precision']:.3f}",
               f"{E['clauses'][c]['precision_at_coverage']['INKLINE+']['0.05']['precision']:.3f}",
-              f"{E['clauses'][c]['delta_p_at_coverage']['INKLINE+']['0.05']:+.3f}",
-              f"{E['clauses'][c]['delta_auprc']['INKLINE+']:+.3f}",
-              v]
-             for c, v in [("CYP_DDI", "__실질적 증분__"), ("QT_ECG", "작지만 있음"),
-                          ("HEMATO", "미미"), ("RENAL", "**기여 없음**"),
-                          ("HEPATIC", "**기여 없음**")]
+              f"{E['clauses'][c]['delta_p_at_coverage']['INKLINE+']['0.05']:+.3f}"]
+             for c in E['mechanism_split']['confirmed']
          ],
-         "widths": [2.3, 1.6, 1.5, 1.4, 1.5, 2.0],
-         "align": ["l", "c", "c", "c", "c", "l"], "row_h": 790, "head_h": 790,
-         "caption": "구조는 CYP·약물상호작용과 QT에만 신호를 준다. 간·신기능 조항에서는 "
-                    "기여가 없다 — 그래서 그 조항에서는 발행하지 않고 기권한다."},
+         "widths": [2.6, 1.4, 1.8, 1.6, 1.4],
+         "align": ["l", "c", "c", "c", "c"], "row_h": 780, "head_h": 780,
+         "caption": "확증된 기전을 가진 5개 조항. 평균 ΔP@5% "
+                    f"{E['mechanism_split']['confirmed_delta_p']['0.05']:+.3f} · "
+                    f"ΔAUPRC {E['mechanism_split']['confirmed_delta_auprc']:+.3f}."},
+        {"type": "callout", "title": "우리가 설명하지 못한 신호가 더 크다.",
+         "text": f"기전을 선언하지 않았거나 확증되지 않은 5개 조항"
+                 f"(신기능·혈액·경련·위산·갑상선)의 증분은 __ΔP@5% "
+                 f"{E['mechanism_split']['exploratory_delta_p']['0.05']:+.3f}__ 로, "
+                 f"확증군({E['mechanism_split']['confirmed_delta_p']['0.05']:+.3f})보다 "
+                 "**크다.** 연속 물성만으로 얻은 신호이며 기전으로 설명하지 못한다. "
+                 "__헤드라인에 섞지 않고 분리해 보고하며, 이 설명 격차를 본선 연구과제로 "
+                 "명시한다.__"},
         {"type": "callout", "title": "가장 중요한 음성 결과.",
          "text": f"확증된 경보를 그대로 조항으로 발행하는 규칙 엔진(B-RULE)은 템플릿보다 "
                  f"**나빴다**(ΔAUPRC {E['mean_delta_auprc']['B-RULE']:+.3f}). "

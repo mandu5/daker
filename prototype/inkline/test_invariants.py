@@ -21,6 +21,7 @@ sys.path.insert(0, os.path.join(ROOT, "trialbench"))
 from agents import Clause, Ledger, Provenance, sha  # noqa: E402
 from consistency import check as consistency_check  # noqa: E402
 from evidence import lookup  # noqa: E402
+from extraction import LLMExtractor, RegexExtractor  # noqa: E402
 from model import SAFETY_CLAUSES, split_of  # noqa: E402
 
 PASS, FAIL = [], []
@@ -176,6 +177,36 @@ def test_evidence_isolation():
     ok("QT_ECG 는 ICH E14 로 결박된다", bool(found2) and found2[0]["url"])
 
 
+# ── 12. 추출값은 원문에 실재해야 한다 (LLM 이 지어내도 막힌다) ──
+def test_extraction_grounding():
+    print("\n[12] 추출된 값은 원문 span 대조를 통과해야만 쓰인다")
+    text = ("In a 28-day repeat-dose toxicity study in rat, the NOAEL was "
+            "25 mg/kg/day. Target organs: liver and kidney.")
+    rx = RegexExtractor().extract(text)
+    names = {f.name for f in rx.verified_fields()}
+    ok("결정론 추출기가 NOAEL 을 찾는다", "noael_mg_kg" in names, f"{names}")
+    ok("NOAEL 값이 25", any(f.value == 25.0 for f in rx.verified_fields()
+                            if f.name == "noael_mg_kg"))
+    ok("종(species) 추출", "species" in names)
+    ok("모든 추출값이 검증됨", all(f.verified for f in rx.verified_fields()))
+
+    # LLM 이 원문에 없는 값을 지어낸 경우를 모사
+    def fake_llm(prompt):
+        return [
+            {"name": "noael_mg_kg", "value": 25.0, "unit": "mg/kg",
+             "span_text": "NOAEL was 25 mg/kg/day"},          # 실재
+            {"name": "mtd_mg_kg", "value": 100.0, "unit": "mg/kg",
+             "span_text": "MTD was 100 mg/kg/day"},           # 원문에 없음
+        ]
+    llm = LLMExtractor(call=fake_llm).extract(text)
+    got = {f.name for f in llm.verified_fields()}
+    iso = {f.name for f in llm.isolated}
+    ok("원문에 있는 값은 통과", "noael_mg_kg" in got, f"got={got}")
+    ok("**LLM 이 지어낸 값은 격리된다**", "mtd_mg_kg" in iso, f"isolated={iso}")
+    ok("격리된 값은 검증 필드에 없다", "mtd_mg_kg" not in got)
+    ok(f"격리율 보고 ({llm.isolation_rate():.0%})", llm.isolation_rate() == 0.5)
+
+
 def main():
     print("먹줄 안전 불변식 테스트")
     print("=" * 60)
@@ -183,7 +214,8 @@ def main():
                test_safety_escalation, test_isolated_evidence,
                test_missing_followup, test_indication_conflict,
                test_warning_budget, test_split_determinism,
-               test_hash_sensitivity, test_evidence_isolation):
+               test_hash_sensitivity, test_evidence_isolation,
+               test_extraction_grounding):
         fn()
     print("\n" + "=" * 60)
     print(f"통과 {len(PASS)} · 실패 {len(FAIL)}")

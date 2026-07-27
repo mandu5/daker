@@ -68,7 +68,10 @@ CHECKS = [
      sum(1 for v in TAU["per_clause"].values() if not v.get("sealed")), 0),
     ("E1 확증군 ΔP@5%", 0.050,
      E1["mechanism_split"]["confirmed_delta_p"]["0.05"], 0.0005),
-    ("E1 미확증군 ΔP@5%", 0.044,
+    # 2차 라벨러 감사(D3 eGFR/EGFR · D4 hemoglobin/HbA1c) 이후 0.044 → 0.036.
+    # 미확증군의 우위였던 것 일부가 화학 신호가 아니라 **적응증이 라벨에 샌 것**
+    # 이었다. 확증군(+0.050)은 그대로이므로 두 군의 격차가 벌어졌다.
+    ("E1 미확증군 ΔP@5%", 0.036,
      E1["mechanism_split"]["exploratory_delta_p"]["0.05"], 0.0005),
     ("CYP·DDI 템플릿 P@5%", 0.216,
      E1["clauses"]["CYP_DDI"]["precision_at_coverage"]["B-TPL"]["0.05"]["precision"],

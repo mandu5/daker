@@ -545,9 +545,69 @@ def fig_selfcorrect():
              width=600)
 
 
+
+# ── 그림 0. 1쪽 히어로 — 10초 안에 이해되는 흐름 ─────────────
+def fig_hero():
+    """참가팀 상호평가(30%)는 비전문가가 5분 안에 두 제안서를 비교한다.
+    1쪽에 시각적 앵커가 없으면 첫인상에서 진다."""
+    import json as _j
+    e3 = _j.load(open(os.path.join(REPO, "prototype", "results",
+                                   "e3_null.json"), encoding="utf-8"))
+
+    def step(no, title, sub, tone, w=None):
+        return (
+            f"<div style='flex:1;background:#fff;border:1.5px solid {tone};"
+            f"border-radius:7px;padding:8px 7px;text-align:center;'>"
+            f"<div style='font-size:9px;color:{tone};font-weight:700;'>{no}</div>"
+            f"<div style='font-size:11.5px;font-weight:700;margin:2px 0 3px;"
+            f"line-height:1.25;'>{title}</div>"
+            f"<div style='font-size:9px;color:#5A5A5A;line-height:1.35;'>{sub}</div>"
+            f"</div>")
+
+    def arrow():
+        return (f"<div style='display:flex;align-items:center;color:{DET};"
+                f"font-size:13px;padding:0 1px;'>▶</div>")
+
+    flow = (
+        "<div style='display:flex;align-items:stretch;gap:2px;'>"
+        + step("입력", "분자 구조", "SMILES · 적응증 · 상", NAVY)
+        + arrow()
+        + step("①②", "조항 후보", "구조 경보 → 조항<br><b>템플릿 기저와 함께</b>", DET)
+        + arrow()
+        + step("③④", "스스로 반증", "Δ* 구조 귀속 검정<br><b>근거 없으면 기각</b>", REJ)
+        + arrow()
+        + step("⑤", "선택적 발행", "발행 · 사람검토 · <b>기권</b><br>감사 DAG 봉인", OK)
+        + "</div>")
+
+    band = (
+        f"<div style='display:flex;gap:6px;margin-top:7px;'>"
+        f"<div style='flex:1.35;background:{NAVY};color:#fff;border-radius:6px;"
+        f"padding:7px 10px;font-size:10.5px;line-height:1.45;'>"
+        f"<b style='font-size:11.5px;'>다른 팀은 조항을 더 잘 만드는 AI를 만듭니다.</b><br>"
+        f"먹줄은 <b>이 조항이 정말 이 분자 때문인지</b> 따지고, "
+        f"근거가 부족하면 <b>말하지 않습니다.</b></div>"
+        f"<div style='flex:1;border:1.4px solid {OK};border-radius:6px;"
+        f"padding:6px 9px;'>"
+        f"<div style='font-size:9px;color:#5A5A5A;'>기권율 · 실측</div>"
+        f"<div style='font-size:16px;font-weight:700;color:{OK};'>"
+        f"{e3['decision_mix']['abstain']['rate']:.0%}</div>"
+        f"<div style='font-size:8.6px;color:#5A5A5A;line-height:1.3;'>"
+        f"말할 자격이 있는 곳에서만 말한다</div></div>"
+        f"<div style='flex:1;border:1.4px solid {DET};border-radius:6px;"
+        f"padding:6px 9px;'>"
+        f"<div style='font-size:9px;color:#5A5A5A;'>음성 대조 누출</div>"
+        f"<div style='font-size:16px;font-weight:700;color:{DET};'>0건</div>"
+        f"<div style='font-size:8.6px;color:#5A5A5A;line-height:1.3;'>"
+        f"경보 없는 {e3['negative_control']['n']:,}쌍</div></div>"
+        f"</div>")
+
+    F.render(flow + band, os.path.join(OUT, "fig0_hero.png"), width=600)
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     for fn in (fig_architecture, fig_mechanism_gate, fig_delta_star,
-               fig_selective, fig_eval, fig_run, fig_selfcorrect):
+               fig_selective, fig_eval, fig_run, fig_selfcorrect,
+               fig_hero):
         fn()
         print("생성:", fn.__name__)

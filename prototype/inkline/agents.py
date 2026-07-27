@@ -116,6 +116,9 @@ class Clause:
     sealed_falsifier: dict = None
     mechanism: str = ""
     attribution_scope: dict = None
+    tau: float = None
+    tau_low: float = None
+    issuance_sealed: bool = False
 
     def four_tuple_complete(self):
         return bool(self.provenance and self.provenance.is_verified()
@@ -472,11 +475,39 @@ class Adversary:
 
 # ══ ⑤ LEDGER ════════════════════════════════════════════════
 class Ledger:
-    """선택적 발행 · append-only 원장 · 감사 DAG."""
+    """선택적 발행 · append-only 원장 · 감사 DAG.
 
-    def __init__(self, tau=TAU_DEFAULT, tau_low=TAU_LOW_DEFAULT, eps=0.02):
+    조항별 τ 는 보정 분할에서 목표 정밀도를 만족하도록 산출한 값을 쓴다
+    (prototype/results/tau_calibration.json). 목표를 만족하는 임계가 없는
+    조항은 **발행 자체가 봉인**되어 사람검토·기권만 가능하다.
+    전역 τ 하나로 모든 조항을 판정하면 조항마다 신뢰도 분포가 달라
+    어떤 조항은 과다 발행되고 어떤 조항은 정밀도 0 으로 발행된다.
+    """
+
+    CALIB_PATH = os.path.join(ROOT, "results", "tau_calibration.json")
+
+    def __init__(self, tau=TAU_DEFAULT, tau_low=TAU_LOW_DEFAULT, eps=0.02,
+                 calibration=None):
         self.tau, self.tau_low, self.eps = tau, tau_low, eps
         self.entries = []
+        self.calib = calibration if calibration is not None else self._load()
+
+    @classmethod
+    def _load(cls):
+        try:
+            with open(cls.CALIB_PATH, encoding="utf-8") as f:
+                return json.load(f).get("per_clause", {})
+        except Exception:
+            return {}
+
+    def thresholds(self, clause_type):
+        """(τ, τ_low, 봉인 여부)."""
+        v = self.calib.get(clause_type)
+        if not v:
+            return self.tau, self.tau_low, False
+        if v.get("sealed"):
+            return None, None, True
+        return v["tau"], v["tau_low"], False
 
     def trust(self, c):
         if c.delta_star != c.delta_star:      # NaN
@@ -484,8 +515,11 @@ class Ledger:
         return c.delta_star / (c.sigma + self.eps) * max(c.ad, 1e-3)
 
     def decide(self, clauses, trace=None):
+        n_sealed = 0
         for c in clauses:
             c.trust = self.trust(c)
+            tau, tau_low, sealed = self.thresholds(c.clause_type)
+            c.tau, c.tau_low, c.issuance_sealed = tau, tau_low, sealed
             if not c.trigger_risks:
                 c.decision, c.reason_code = "abstain", "no_structural_trigger"
             elif c.delta_star != c.delta_star:
@@ -495,9 +529,14 @@ class Ledger:
                 c.decision, c.reason_code = "abstain", "four_tuple_incomplete"
             elif c.delta_star <= 0:
                 c.decision, c.reason_code = "abstain", "not_structure_attributable"
-            elif c.trust >= self.tau:
+            elif sealed:
+                # 보정에서 목표 정밀도를 만족하는 임계를 찾지 못한 조항.
+                # 발행하지 않고 사람검토로만 올린다. 억지로 발행하느니 낫다.
+                c.decision, c.reason_code = "escalate", "issuance_sealed_by_calibration"
+                n_sealed += 1
+            elif c.trust >= tau:
                 c.decision, c.reason_code = "advance", "trust_above_tau"
-            elif c.trust >= self.tau_low:
+            elif c.trust >= tau_low:
                 c.decision, c.reason_code = "escalate", "trust_in_review_band"
             else:
                 c.decision, c.reason_code = "abstain", "trust_below_floor"
@@ -509,7 +548,8 @@ class Ledger:
              for k in ("advance", "escalate", "abstain")}
         _t(trace, "LEDGER", "선택적 발행",
            f"발행 {n['advance']} · 사람검토 {n['escalate']} · 기권 {n['abstain']} "
-           f"(기권율 {n['abstain']/max(len(clauses),1):.0%})")
+           f"(기권율 {n['abstain']/max(len(clauses),1):.0%})"
+           + (f" · 보정에서 발행 봉인된 조항 {n_sealed}종" if n_sealed else ""))
         return clauses
 
     def seal(self, run_id, clauses, trace, meta):

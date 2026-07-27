@@ -85,8 +85,8 @@ def blocks():
         {"type": "h1", "no": "요약", "text": "이 프로토콜의 조항 중, 이 분자 때문에 들어간 것은 몇 개입니까?"},
         {"type": "p", "tight": True, "text":
             "국내 바이오텍은 임상 프로토콜을 유사 시험 템플릿에서 복제해 쓴다. 그 결과 "
-            "**이 분자에 고유한 위험이 조항으로 번역되지 않고**, 나중에 프로토콜 수정으로 "
-            "청구된다(실질적 수정 1건 직접비 중앙값 2상 US$141,000·3상 US$535,000)."},
+            "**이 분자에 고유한 위험이 조항으로 번역되지 않고** 나중에 프로토콜 수정으로 "
+            "청구된다(수정 1건 직접비 중앙값 2상 US$141,000)."},
         {"type": "p", "tight": True, "text":
             f"**{AGENT_KO}(INKLINE)**은 SMILES에서 구조 위험을 연역해 프로토콜 조항을 제안하되, "
             "__템플릿에 이미 있는 조항과 이 분자 때문에 필요한 조항을 데이터로 분리__하고, "
@@ -98,12 +98,11 @@ def blocks():
             f"{len(R['mechanism_gate']['refuted'])}쌍이 기각됐다. 티오펜의 반응성 "
             "대사체→간독성은 **반대 방향으로** 유의했다(lift 0.57). 에이전트도 이미 "
             "돌아가며 **3회 반복 실행 시 감사 DAG 해시가 일치**한다."},
-        {"type": "callout", "title": "그래서 이 시스템이 필요하다.",
-         "text": "구조 경보를 그대로 조항으로 번역하는 규칙 엔진은 템플릿보다 "
-                 f"**오히려 나빴다**(ΔAUPRC {E['mean_delta_auprc']['B-RULE']:+.3f}). "
-                 f"주지표 FOR_safety는 __{N['FOR_safety']['rate']:.2%}__(목표 2% 이하) "
-                 f"통과, 확증 경보 없는 {N['negative_control']['n']:,}쌍의 발행은 "
-                 "**0건**이었다."},
+        {"type": "p", "tight": True, "text":
+            "**그래서 이 시스템이 필요하다.** 구조 경보를 그대로 조항으로 번역하는 규칙 "
+            f"엔진은 템플릿보다 **오히려 나빴다**(ΔAUPRC "
+            f"{E['mean_delta_auprc']['B-RULE']:+.3f}). 주지표 FOR_safety는 "
+            f"__{N['FOR_safety']['rate']:.2%}__(목표 2% 이하)로 통과했다."},
     ]
 
     # 1쪽 실측 표
@@ -114,7 +113,7 @@ def blocks():
     KC = {"CYP_DDI": "CYP·약물상호작용", "HEPATIC": "간기능", "QT_ECG": "QT·심전도"}
     KO.update({"carboxylic_acid": "카복실산"})
     KC.update({"FOOD_EFFECT": "음식·자몽 제한", "GI_IRRITATION": "위장관 궤양 병력"})
-    for r in conf[:6]:
+    for r in conf[:4]:
         rows.append([KO.get(r["flag"], r["flag"]), KC.get(r["clause"], r["clause"]),
                      f"{r['lift']:.2f}", f"{r['lift_onc']:.2f} / {r['lift_non']:.2f}",
                      f"{r['p_value']:.0e}".replace("e-0", "e-")])
@@ -123,13 +122,15 @@ def blocks():
          "header": ["구조 경보", "프로토콜 조항", "lift", "종양 / 비종양", "Fisher p"],
          "rows": rows, "widths": [2.6, 2.6, 1.1, 1.9, 1.4],
          "align": ["l", "l", "c", "c", "c"], "row_h": 830, "head_h": 830,
-         "caption": f"확증 {len(conf)}쌍 중 상위 6. 적응증 층화 후에도 양쪽에서 방향이 "
+         "caption": f"확증 {len(conf)}쌍 중 상위 4. 적응증 층화 후에도 양쪽에서 방향이 "
                     f"유지된 것만 남겼다 (실제 임상시험 {n_trials:,}건, 사전 선언 "
                     f"{len(R['preregistered_pairs'])}쌍 중 확증률 "
                     f"{R['confirmatory_rate']:.1%})."},
-        {"type": "p", "tight": True, "text":
-            "~~재현: prototype/trialbench/fetch.sh → s2c_analysis.py. 원자료는 TrialBench "
-            "(Nature Sci Data 2025, ClinicalTrials.gov 기반 공개 데이터).~~"},
+        fig("fig0_hero.png", 138.0),
+        {"type": "fine", "text":
+            "재현: prototype/trialbench/fetch.sh → s2c_analysis.py → inkline/evaluate.py. "
+            "원자료는 TrialBench (Nature Sci Data 2025, ClinicalTrials.gov 기반 공개 데이터). "
+            "본 제안서의 모든 수치는 이 파이프라인 산출물에서 직접 읽어온 것이다."},
         {"type": "pagebreak"},
     ]
 

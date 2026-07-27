@@ -1,0 +1,97 @@
+{
+ "target_precision": 0.3,
+ "n_calib_trials": 2500,
+ "n_pairs": 1782,
+ "min_advance_n": 20,
+ "escalate_recall": 0.5,
+ "per_clause": {
+  "QT_ECG": {
+   "n_candidates": 562,
+   "base_rate": 0.2402135231316726,
+   "tau": 1.498992328278209,
+   "tau_low": 1.498992328278209,
+   "sealed": false,
+   "advance_n": 283,
+   "advance_precision": 0.3003533568904594,
+   "precision_ci": [
+    0.24990919702144365,
+    0.3561451549275066
+   ],
+   "lift_vs_base": 1.250359900536579
+  },
+  "CYP_DDI": {
+   "n_candidates": 491,
+   "base_rate": 0.1446028513238289,
+   "tau": 2.2780327491015884,
+   "tau_low": 1.905659409559873,
+   "sealed": false,
+   "advance_n": 76,
+   "advance_precision": 0.3026315789473684,
+   "precision_ci": [
+    0.21091189301319777,
+    0.41334413392013025
+   ],
+   "lift_vs_base": 2.0928465530022238
+  },
+  "HEPATIC": {
+   "n_candidates": 9,
+   "base_rate": 0.2222222222222222,
+   "tau": null,
+   "tau_low": null,
+   "sealed": true,
+   "reason": "목표 정밀도 0.30 를 만족하는 임계가 없음 (최소 발행 20건 조건). 발행을 봉인하고 사람검토·기권만 사용한다"
+  },
+  "RENAL": {
+   "n_candidates": 0,
+   "tau": null,
+   "tau_low": null,
+   "sealed": true,
+   "reason": "보정 분할에 후보 없음"
+  },
+  "HEMATO": {
+   "n_candidates": 0,
+   "tau": null,
+   "tau_low": null,
+   "sealed": true,
+   "reason": "보정 분할에 후보 없음"
+  },
+  "FOOD_EFFECT": {
+   "n_candidates": 395,
+   "base_rate": 0.05822784810126582,
+   "tau": null,
+   "tau_low": null,
+   "sealed": true,
+   "reason": "목표 정밀도 0.30 를 만족하는 임계가 없음 (최소 발행 20건 조건). 발행을 봉인하고 사람검토·기권만 사용한다"
+  },
+  "GI_IRRITATION": {
+   "n_candidates": 325,
+   "base_rate": 0.12,
+   "tau": null,
+   "tau_low": null,
+   "sealed": true,
+   "reason": "목표 정밀도 0.30 를 만족하는 임계가 없음 (최소 발행 20건 조건). 발행을 봉인하고 사람검토·기권만 사용한다"
+  },
+  "SEIZURE": {
+   "n_candidates": 0,
+   "tau": null,
+   "tau_low": null,
+   "sealed": true,
+   "reason": "보정 분할에 후보 없음"
+  },
+  "GASTRIC_PH": {
+   "n_candidates": 0,
+   "tau": null,
+   "tau_low": null,
+   "sealed": true,
+   "reason": "보정 분할에 후보 없음"
+  },
+  "THYROID": {
+   "n_candidates": 0,
+   "tau": null,
+   "tau_low": null,
+   "sealed": true,
+   "reason": "보정 분할에 후보 없음"
+  }
+ },
+ "note": "평가 분할을 사용하지 않는다. 학습 분할에서 떼어낸 보정 분할만 사용한다."
+}

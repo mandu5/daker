@@ -38,8 +38,15 @@ PHASE_COL = "phase"
 # 각 항목: (조항 코드, 설명, 정규식)
 CLAUSE_PATTERNS = {
     "QT_ECG": (
-        "QT 간격·심전도 관련 제외기준",
-        r"\bQTc?\b|\bQT[cF]\b|electrocardiogram|\bECGs?\b|\bEKGs?\b|torsade|long QT",
+        "QT 간격 임계·연장 관련 제외기준",
+        # 라벨러 감사(2026-07-27)에서 발견: 기존 패턴은 "12-lead ECG will be
+        # performed" 같은 **검사 시행 절차 나열**까지 조항으로 잡았다.
+        # 양성의 61.2%가 실제 QT 임계가 아니었다. 임계·연장 맥락을 요구한다.
+        r"QTc?[FB]?\s*[<>≤≥]"                       # QTc > 450 형태
+        r"|QTc?[FB]?\s*(interval)?\s*(of\s*)?(>|<|greater|less|exceed|above|below)"
+        r"|prolong\w*\s+(the\s+)?QT|QT\w*\s+prolong"
+        r"|long QT|torsade|congenital QT"
+        r"|(abnormal|clinically significant)\s+(12-lead\s+)?(ECG|EKG|electrocardiogram)",
     ),
     "HEPATIC": (
         "간기능 수치 기반 제외기준",
@@ -52,9 +59,12 @@ CLAUSE_PATTERNS = {
         r"|renal (impairment|dysfunction|insufficiency)|dialysis",
     ),
     "CYP_DDI": (
-        "CYP 효소·병용금기 약물상호작용 조항",
+        "CYP 효소·수송체 매개 약물상호작용 조항",
+        # 라벨러 감사에서 발견: grapefruit 이 이 패턴과 FOOD_EFFECT 양쪽에 있어
+        # 같은 신호를 두 조항으로 세고 있었다(음식효과 양성의 97.2%가 중복).
+        # grapefruit 은 FOOD_EFFECT 로만 세고, 여기서는 효소·수송체 언급을 요구한다.
         r"CYP\s?-?\s?3A|CYP\s?-?\s?2D6|CYP\s?-?\s?2C|CYP\s?-?\s?1A2|cytochrome"
-        r"|strong (inhibitor|inducer)|P-?glycoprotein|\bP-?gp\b|grapefruit",
+        r"|strong (inhibitor|inducer)|P-?glycoprotein|\bP-?gp\b|OATP|BCRP",
     ),
     "QT_DRUG": (
         "QT 연장 약물 병용 금지 조항",

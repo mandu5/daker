@@ -170,11 +170,20 @@ def test_hash_sensitivity():
 # ── 11. 근거 코퍼스에 없는 문서를 요구하면 격리된다 ────────────
 def test_evidence_isolation():
     print("\n[11] 코퍼스에 없는 근거를 요구하는 조항은 격리된다")
-    found, missing = lookup("CYP_DDI")
-    ok("CYP_DDI 는 근거를 찾지 못한다 (ICH M12 미확인)",
-       not found and missing, f"found={found} missing={missing}")
-    found2, _ = lookup("QT_ECG")
-    ok("QT_ECG 는 ICH E14 로 결박된다", bool(found2) and found2[0]["url"])
+    # 코퍼스에 있는 문서는 결박되고, 없는 문서를 요구하는 조항은 격리된다.
+    for c, doc in (("QT_ECG", "ICH_E14"), ("CYP_DDI", "ICH_M12"),
+                   ("HEPATIC", "FDA_DILI_2009")):
+        f, _ = lookup(c)
+        ok(f"{c} → {doc} 로 결박", bool(f) and f[0]["doc_id"] == doc
+           and bool(f[0]["url"]), f"found={[x['doc_id'] for x in f]}")
+    for c in ("RENAL", "FOOD_EFFECT", "SEIZURE"):
+        f, m = lookup(c)
+        ok(f"{c} → 근거 미확보로 격리", not f, f"found={f}")
+    # 격리율이 지표로 보고되는지
+    from model import TARGET_CLAUSES
+    iso = sum(1 for c in TARGET_CLAUSES if not lookup(c)[0])
+    ok(f"격리율 보고 ({iso}/{len(TARGET_CLAUSES)})", 0 < iso < len(TARGET_CLAUSES),
+       "코퍼스가 일부만 채워진 상태가 지표로 드러나야 한다")
 
 
 # ── 12. 추출값은 원문에 실재해야 한다 (LLM 이 지어내도 막힌다) ──

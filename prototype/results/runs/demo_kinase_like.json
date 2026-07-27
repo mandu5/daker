@@ -1,5 +1,5 @@
 {
- "run_id": "d98c4f6eeffe",
+ "run_id": "d35a81626a45",
  "clauses": [
   {
    "clause_id": "C-QT_ECG-00",
@@ -18,13 +18,13 @@
    "ad": 0.3139534890651703,
    "trust": 0.4406368810592335,
    "decision": "escalate",
-   "reason_code": "trust_in_review_band",
+   "reason_code": "safety_clause_mandatory_review",
    "provenance": {
-    "kind": "computed",
+    "kind": "guideline",
     "detail": "템플릿 기저 p_base=0.320 (Phase 1, 종양) · 모델 p_hat=0.497",
-    "url": "",
-    "span_id": "",
-    "verified_at": ""
+    "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/e14-clinical-evaluation-qtqtc-interval-prolongation-and-proarrhythmic-potential-non-antiarrhythmic",
+    "span_id": "E14-QA-R3",
+    "verified_at": "2026-07-26"
    },
    "sealed_falsifier": {
     "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
@@ -42,7 +42,10 @@
     "mean_decoy_delta": 0.12943664438165284,
     "sd_decoy_delta": 2.7755575615628914e-17,
     "structure_share": 0.2712668875250237
-   }
+   },
+   "tau": 1.498992328278209,
+   "tau_low": 1.498992328278209,
+   "issuance_sealed": false
   },
   {
    "clause_id": "C-CYP_DDI-01",
@@ -61,13 +64,13 @@
    "ad": 0.3139534890651703,
    "trust": 0.6222549567264053,
    "decision": "escalate",
-   "reason_code": "trust_in_review_band",
+   "reason_code": "safety_clause_mandatory_review",
    "provenance": {
-    "kind": "computed",
+    "kind": "guideline",
     "detail": "템플릿 기저 p_base=0.240 (Phase 1, 종양) · 모델 p_hat=0.330",
-    "url": "",
-    "span_id": "",
-    "verified_at": ""
+    "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/m12-drug-interaction-studies",
+    "span_id": "M12-2024-08",
+    "verified_at": "2026-07-27"
    },
    "sealed_falsifier": {
     "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
@@ -86,7 +89,10 @@
     "mean_decoy_delta": 0.03250287852167597,
     "sd_decoy_delta": 0.007482114879603598,
     "structure_share": 0.6376251096536689
-   }
+   },
+   "tau": 2.2780327491015884,
+   "tau_low": 1.905659409559873,
+   "issuance_sealed": false
   },
   {
    "clause_id": "C-HEPATIC-02",
@@ -97,18 +103,18 @@
    "p_base": 0.6549607405855334,
    "p_hat": 0.48936170212765956,
    "delta": -0.16559903845787388,
-   "delta_star": -0.16559903845787388,
+   "delta_star": null,
    "sigma": 0.009377119360460774,
    "ad": 0.3139534890651703,
-   "trust": -1.7697581329114824,
+   "trust": null,
    "decision": "abstain",
    "reason_code": "no_structural_trigger",
    "provenance": {
-    "kind": "computed",
+    "kind": "guideline",
     "detail": "템플릿 기저 p_base=0.655 (Phase 1, 종양) · 모델 p_hat=0.489",
-    "url": "",
-    "span_id": "",
-    "verified_at": ""
+    "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/drug-induced-liver-injury-premarketing-clinical-evaluation",
+    "span_id": "DILI-2009-07",
+    "verified_at": "2026-07-27"
    },
    "sealed_falsifier": {
     "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
@@ -116,7 +122,10 @@
     "hash": "91d2554819b38ba673b7496855b2f5294c9d80db50a255b00b370658217328e7"
    },
    "mechanism": "",
-   "attribution_scope": null
+   "attribution_scope": null,
+   "tau": null,
+   "tau_low": null,
+   "issuance_sealed": true
   },
   {
    "clause_id": "C-RENAL-03",
@@ -127,10 +136,10 @@
    "p_base": 0.43735919481206537,
    "p_hat": 0.31317494600431967,
    "delta": -0.1241842488077457,
-   "delta_star": -0.1241842488077457,
+   "delta_star": null,
    "sigma": 0.01166437244478618,
    "ad": 0.3139534890651703,
-   "trust": -1.2312916754662766,
+   "trust": null,
    "decision": "abstain",
    "reason_code": "no_structural_trigger",
    "provenance": {
@@ -146,7 +155,10 @@
     "hash": "e7788826d2171216619471817f93ffa1053ae5f056e4a23c467894837fae1d7e"
    },
    "mechanism": "",
-   "attribution_scope": null
+   "attribution_scope": null,
+   "tau": null,
+   "tau_low": null,
+   "issuance_sealed": true
   },
   {
    "clause_id": "C-HEMATO-04",
@@ -157,10 +169,10 @@
    "p_base": 0.5492124799513267,
    "p_hat": 0.3501144164759725,
    "delta": -0.1990980634753542,
-   "delta_star": -0.1990980634753542,
+   "delta_star": null,
    "sigma": 0.00927024457666962,
    "ad": 0.3139534890651703,
-   "trust": -2.135531581585381,
+   "trust": null,
    "decision": "abstain",
    "reason_code": "no_structural_trigger",
    "provenance": {
@@ -176,7 +188,189 @@
     "hash": "616276a90c8c861edfe04f2b980fd6448df94780b979511793f6e683fccb11bc"
    },
    "mechanism": "",
-   "attribution_scope": null
+   "attribution_scope": null,
+   "tau": null,
+   "tau_low": null,
+   "issuance_sealed": true
+  },
+  {
+   "clause_id": "C-FOOD_EFFECT-05",
+   "clause_type": "FOOD_EFFECT",
+   "text": "음식·자몽 등 섭취 제한 조항",
+   "clause_class": "molecule_specific",
+   "trigger_risks": [
+    "R-halogenated_aromatic-07",
+    "R-lipophilic-13"
+   ],
+   "p_base": 0.047159546480784,
+   "p_hat": 0.15394853593611355,
+   "delta": 0.10678898945532955,
+   "delta_star": 0.08608257587693935,
+   "sigma": 0.00958578477823275,
+   "ad": 0.3139534890651703,
+   "trust": 0.9134766999375403,
+   "decision": "abstain",
+   "reason_code": "evidence_not_in_corpus",
+   "provenance": {
+    "kind": "computed",
+    "detail": "템플릿 기저 p_base=0.047 (Phase 1, 종양) · 모델 p_hat=0.154",
+    "url": "",
+    "span_id": "",
+    "verified_at": ""
+   },
+   "sealed_falsifier": {
+    "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
+    "recorded_at": "pre-judgment",
+    "hash": "b9162c0a3605b922faef593b3b04443ef37e226769e7573decb1dce697814623"
+   },
+   "mechanism": "친유성 증가를 통한 동일 기전; 친유성 화합물은 식이 지방에 따라 흡수가 크게 달라지고, CYP3A4 기질인 경우 자몽주스 제한이 붙는다",
+   "attribution_scope": {
+    "ablatable": [
+     "halogenated_aromatic"
+    ],
+    "property_only": [
+     "lipophilic"
+    ],
+    "n_decoy": 12,
+    "mean_decoy_delta": 0.0207064135783902,
+    "sd_decoy_delta": 0.011036749675009285,
+    "structure_share": 0.8060997329031584
+   },
+   "tau": null,
+   "tau_low": null,
+   "issuance_sealed": true
+  },
+  {
+   "clause_id": "C-GI_IRRITATION-06",
+   "clause_type": "GI_IRRITATION",
+   "text": "위장관 궤양·출혈 병력 제외기준",
+   "clause_class": "template_baseline",
+   "trigger_risks": [],
+   "p_base": 0.06687194906649399,
+   "p_hat": 0.06872810725933085,
+   "delta": 0.0018561581928368542,
+   "delta_star": null,
+   "sigma": 0.004458417649559912,
+   "ad": 0.3139534890651703,
+   "trust": null,
+   "decision": "abstain",
+   "reason_code": "no_structural_trigger",
+   "provenance": {
+    "kind": "computed",
+    "detail": "템플릿 기저 p_base=0.067 (Phase 1, 종양) · 모델 p_hat=0.069",
+    "url": "",
+    "span_id": "",
+    "verified_at": ""
+   },
+   "sealed_falsifier": {
+    "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
+    "recorded_at": "pre-judgment",
+    "hash": "cfce9c12e6a72fafe501438dcfb7a9115d8a810461b3bbc12161d6b50518fa61"
+   },
+   "mechanism": "",
+   "attribution_scope": null,
+   "tau": null,
+   "tau_low": null,
+   "issuance_sealed": true
+  },
+  {
+   "clause_id": "C-SEIZURE-07",
+   "clause_type": "SEIZURE",
+   "text": "경련·발작 병력 제외기준",
+   "clause_class": "template_baseline",
+   "trigger_risks": [],
+   "p_base": 0.14202566924542673,
+   "p_hat": 0.25146198830409355,
+   "delta": 0.10943631905866683,
+   "delta_star": null,
+   "sigma": 0.011899286538024745,
+   "ad": 0.3139534890651703,
+   "trust": null,
+   "decision": "abstain",
+   "reason_code": "no_structural_trigger",
+   "provenance": {
+    "kind": "computed",
+    "detail": "템플릿 기저 p_base=0.142 (Phase 1, 종양) · 모델 p_hat=0.251",
+    "url": "",
+    "span_id": "",
+    "verified_at": ""
+   },
+   "sealed_falsifier": {
+    "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
+    "recorded_at": "pre-judgment",
+    "hash": "1115d5e347750ad14387eee879178163402fa879f14ec6da57aec2c044ca3fd6"
+   },
+   "mechanism": "",
+   "attribution_scope": null,
+   "tau": null,
+   "tau_low": null,
+   "issuance_sealed": true
+  },
+  {
+   "clause_id": "C-GASTRIC_PH-08",
+   "clause_type": "GASTRIC_PH",
+   "text": "위산분비억제제·제산제 병용 제한 조항",
+   "clause_class": "template_baseline",
+   "trigger_risks": [],
+   "p_base": 0.03627695821102544,
+   "p_hat": 0.02987598647125141,
+   "delta": -0.006400971739774029,
+   "delta_star": null,
+   "sigma": 0.0028725502763578287,
+   "ad": 0.3139534890651703,
+   "trust": null,
+   "decision": "abstain",
+   "reason_code": "no_structural_trigger",
+   "provenance": {
+    "kind": "computed",
+    "detail": "템플릿 기저 p_base=0.036 (Phase 1, 종양) · 모델 p_hat=0.030",
+    "url": "",
+    "span_id": "",
+    "verified_at": ""
+   },
+   "sealed_falsifier": {
+    "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
+    "recorded_at": "pre-judgment",
+    "hash": "4a94013af131cd4cc5dfcad3078aecaf24412e338e3dc612a7ea74112cda144c"
+   },
+   "mechanism": "",
+   "attribution_scope": null,
+   "tau": null,
+   "tau_low": null,
+   "issuance_sealed": true
+  },
+  {
+   "clause_id": "C-THYROID-09",
+   "clause_type": "THYROID",
+   "text": "갑상선 기능 관련 조항",
+   "clause_class": "template_baseline",
+   "trigger_risks": [],
+   "p_base": 0.06740561699712748,
+   "p_hat": 0.07601026298909556,
+   "delta": 0.008604645991968085,
+   "delta_star": null,
+   "sigma": 0.005780211893342691,
+   "ad": 0.3139534890651703,
+   "trust": null,
+   "decision": "abstain",
+   "reason_code": "no_structural_trigger",
+   "provenance": {
+    "kind": "computed",
+    "detail": "템플릿 기저 p_base=0.067 (Phase 1, 종양) · 모델 p_hat=0.076",
+    "url": "",
+    "span_id": "",
+    "verified_at": ""
+   },
+   "sealed_falsifier": {
+    "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
+    "recorded_at": "pre-judgment",
+    "hash": "20b44db0f6e256d58942a82acf33db236e5b1731cd3a938577c7e4b891486fc5"
+   },
+   "mechanism": "",
+   "attribution_scope": null,
+   "tau": null,
+   "tau_low": null,
+   "issuance_sealed": true
   }
  ],
  "trace": [
@@ -188,48 +382,183 @@
   },
   {
    "seq": 1,
-   "agent": "SCRIBE",
-   "step": "조항 후보 기안",
-   "detail": "5종 · 분자특이 2종 · Δ 범위 [-0.199, +0.178]"
-  },
-  {
-   "seq": 2,
    "agent": "ACTUARY",
    "step": "개시용량 산출",
    "detail": "NOAEL 25.0 mg/kg (rat) → HED 4.032 → SF10 → MRSD 0.4032 mg/kg = 24.19 mg/60kg"
   },
   {
-   "seq": 3,
+   "seq": 2,
    "agent": "ACTUARY",
    "step": "검정력 게이트",
    "detail": "N=60, 0.100→0.250 · power=0.58 · 부족 → 필요 N≈101"
   },
   {
+   "seq": 3,
+   "agent": "ORCHESTRATOR",
+   "step": "라운드 1 시작",
+   "detail": "하향된 경보 없음"
+  },
+  {
    "seq": 4,
+   "agent": "SCRIBE",
+   "step": "조항 후보 기안",
+   "detail": "10종 · 분자특이 3종 · Δ 범위 [-0.199, +0.178]"
+  },
+  {
+   "seq": 5,
+   "agent": "ADVERSARY",
+   "step": "R1 근거 확인",
+   "detail": "QT_ECG: ICH_E14 (body) 결박 · E14-QA-R3"
+  },
+  {
+   "seq": 6,
+   "agent": "ADVERSARY",
+   "step": "R1 근거 확인",
+   "detail": "CYP_DDI: ICH_M12 (body) 결박 · M12-2024-08"
+  },
+  {
+   "seq": 7,
+   "agent": "ADVERSARY",
+   "step": "R1 근거 확인",
+   "detail": "HEPATIC: FDA_DILI_2009 (body) 결박 · DILI-2009-07"
+  },
+  {
+   "seq": 8,
+   "agent": "ADVERSARY",
+   "step": "R1 근거 반증",
+   "detail": "RENAL: 근거 문서 ['FDA_RENAL_IMP'] 를 코퍼스에서 찾지 못함 → 격리"
+  },
+  {
+   "seq": 9,
+   "agent": "ORCHESTRATOR",
+   "step": "A1 재기안 불가",
+   "detail": "RENAL: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)"
+  },
+  {
+   "seq": 10,
+   "agent": "ADVERSARY",
+   "step": "R1 근거 반증",
+   "detail": "HEMATO: 근거 문서 미특정 를 코퍼스에서 찾지 못함 → 격리"
+  },
+  {
+   "seq": 11,
+   "agent": "ORCHESTRATOR",
+   "step": "A1 재기안 불가",
+   "detail": "HEMATO: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)"
+  },
+  {
+   "seq": 12,
+   "agent": "ADVERSARY",
+   "step": "R1 근거 반증",
+   "detail": "FOOD_EFFECT: 근거 문서 ['FDA_FOOD_EFFECT_BA'] 를 코퍼스에서 찾지 못함 → 격리"
+  },
+  {
+   "seq": 13,
+   "agent": "ORCHESTRATOR",
+   "step": "A1 재기안 불가",
+   "detail": "FOOD_EFFECT: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)"
+  },
+  {
+   "seq": 14,
+   "agent": "ADVERSARY",
+   "step": "R1 근거 반증",
+   "detail": "GI_IRRITATION: 근거 문서 ['FDA_GI_SAFETY'] 를 코퍼스에서 찾지 못함 → 격리"
+  },
+  {
+   "seq": 15,
+   "agent": "ORCHESTRATOR",
+   "step": "A1 재기안 불가",
+   "detail": "GI_IRRITATION: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)"
+  },
+  {
+   "seq": 16,
+   "agent": "ADVERSARY",
+   "step": "R1 근거 반증",
+   "detail": "SEIZURE: 근거 문서 ['FDA_SEIZURE'] 를 코퍼스에서 찾지 못함 → 격리"
+  },
+  {
+   "seq": 17,
+   "agent": "ORCHESTRATOR",
+   "step": "A1 재기안 불가",
+   "detail": "SEIZURE: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)"
+  },
+  {
+   "seq": 18,
+   "agent": "ADVERSARY",
+   "step": "R1 근거 반증",
+   "detail": "GASTRIC_PH: 근거 문서 ['FDA_ACID_REDUCING'] 를 코퍼스에서 찾지 못함 → 격리"
+  },
+  {
+   "seq": 19,
+   "agent": "ORCHESTRATOR",
+   "step": "A1 재기안 불가",
+   "detail": "GASTRIC_PH: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)"
+  },
+  {
+   "seq": 20,
+   "agent": "ADVERSARY",
+   "step": "R1 근거 반증",
+   "detail": "THYROID: 근거 문서 미특정 를 코퍼스에서 찾지 못함 → 격리"
+  },
+  {
+   "seq": 21,
+   "agent": "ORCHESTRATOR",
+   "step": "A1 재기안 불가",
+   "detail": "THYROID: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)"
+  },
+  {
+   "seq": 22,
    "agent": "ADVERSARY",
    "step": "R2 구조 귀속 검정",
    "detail": "QT_ECG: Δ=+0.1776 · decoy 12개 평균 Δ=+0.1294(sd 0.0000) → Δ*=+0.0482 · 구조 귀속분 27%"
   },
   {
-   "seq": 5,
+   "seq": 23,
    "agent": "ADVERSARY",
    "step": "R2 구조 귀속 검정",
    "detail": "CYP_DDI: Δ=+0.0897 · decoy 12개 평균 Δ=+0.0325(sd 0.0075) → Δ*=+0.0572 · 구조 귀속분 64%"
   },
   {
-   "seq": 6,
-   "agent": "LEDGER",
-   "step": "선택적 발행",
-   "detail": "발행 0 · 사람검토 2 · 기권 3 (기권율 60%)"
+   "seq": 24,
+   "agent": "ADVERSARY",
+   "step": "R2 구조 귀속 검정",
+   "detail": "FOOD_EFFECT: Δ=+0.1068 · decoy 12개 평균 Δ=+0.0207(sd 0.0110) → Δ*=+0.0861 · 구조 귀속분 81%"
   },
   {
-   "seq": 7,
+   "seq": 25,
+   "agent": "LEDGER",
+   "step": "선택적 발행",
+   "detail": "발행 0 · 사람검토 3 · 기권 7 (기권율 70%) · 보정에서 발행 봉인된 조항 1종"
+  },
+  {
+   "seq": 26,
    "agent": "ACTUARY",
    "step": "모집 게이트",
    "detail": "발행 조항 기준 등록가능 인구 0.0% 감소 · 통과"
+  },
+  {
+   "seq": 27,
+   "agent": "ORCHESTRATOR",
+   "step": "A4 계약 개정 요청",
+   "detail": "기권율 80% > 70% · 주 사유 'no_structural_trigger' → **사람에게 승격. 임계를 자동으로 낮추지 않는다**"
+  },
+  {
+   "seq": 28,
+   "agent": "ORCHESTRATOR",
+   "step": "라운드 1 수렴",
+   "detail": "이번 라운드 개선량 0 → 정지"
   }
  ],
  "meta": {
+  "consistency": {
+   "counts": {
+    "blocking": 0,
+    "warning": 0,
+    "info": 0
+   },
+   "publishable": true,
+   "violations": []
+  },
   "context": {
    "phase": "Phase 1",
    "indication": "advanced solid tumor",
@@ -281,13 +610,39 @@
    "exceeds": false,
    "assumption": "제외기준 간 독립 가정. 실제로는 상관이 있어 감소폭이 과대추정될 수 있음"
   },
+  "rounds": 1,
+  "round_history": [
+   {
+    "round": 1,
+    "advance": 0,
+    "escalate": 2,
+    "abstain": 8,
+    "downgraded": 0,
+    "substituted": 0
+   }
+  ],
+  "redrafts": {},
+  "contract_escalation": {
+   "trigger": "abstain_rate_exceeded",
+   "abstain_rate": 0.8,
+   "dominant_reason": "no_structural_trigger",
+   "action": "사람에게 계약 개정 요청 (자동 완화 금지)"
+  },
+  "case_bank_entries": 0,
   "n_train": 27593,
   "confirmed_triggers": {
    "QT_ECG": [
     "basic_amine",
     "herg_pharmacophore"
    ],
+   "GI_IRRITATION": [
+    "carboxylic_acid"
+   ],
    "CYP_DDI": [
+    "halogenated_aromatic",
+    "lipophilic"
+   ],
+   "FOOD_EFFECT": [
     "halogenated_aromatic",
     "lipophilic"
    ],
@@ -301,7 +656,16 @@
    "scipy": "1.17.1",
    "python": "3.11.15"
   },
+  "evidence_isolated": [
+   "RENAL",
+   "HEMATO",
+   "FOOD_EFFECT",
+   "GI_IRRITATION",
+   "SEIZURE",
+   "GASTRIC_PH",
+   "THYROID"
+  ],
   "seed": 20260807
  },
- "dag_hash": "dbbe61e7d7d5d249190f23bfb7a8d2a5aae73353e212a8355a0dbc37b9e02dcc"
+ "dag_hash": "8c779ee3f5a2227e66a58e427c692892b4b828e0137b5e74e19a522a9759e7d1"
 }

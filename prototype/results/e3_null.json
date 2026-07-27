@@ -54,8 +54,8 @@
    0.1077194797910523
   ]
  },
- "issue_everything_precision": 0.24725,
- "precision_lift_vs_issue_all": 0.9086738261849507,
+ "issue_everything_precision_pooled": 0.24725,
+ "precision_lift_pooled_MISLEADING": 0.9086738261849507,
  "by_clause": {
   "QT_ECG": {
    "n": 800,
@@ -63,7 +63,16 @@
    "advance_rate": 0.16375,
    "escalate_rate": 0.06625,
    "advance_precision": 0.22137404580152673,
-   "escalate_precision": 0.1320754716981132
+   "escalate_precision": 0.1320754716981132,
+   "precision_lift": 1.0864983843019718,
+   "advance_precision_ci": [
+    0.15878744351340543,
+    0.2998366012917585
+   ],
+   "lift_ci": [
+    0.7793248761394131,
+    1.471590681186545
+   ]
   },
   "CYP_DDI": {
    "n": 800,
@@ -71,7 +80,16 @@
    "advance_rate": 0.11875,
    "escalate_rate": 0.10125,
    "advance_precision": 0.23157894736842105,
-   "escalate_precision": 0.14814814814814814
+   "escalate_precision": 0.14814814814814814,
+   "precision_lift": 2.287199480181936,
+   "advance_precision_ci": [
+    0.15819566451338007,
+    0.3258272570095415
+   ],
+   "lift_ci": [
+    1.5624263161815315,
+    3.2180469828102862
+   ]
   },
   "HEPATIC": {
    "n": 800,
@@ -79,7 +97,16 @@
    "advance_rate": 0.00125,
    "escalate_rate": 0.0,
    "advance_precision": 0.0,
-   "escalate_precision": null
+   "escalate_precision": null,
+   "precision_lift": null,
+   "advance_precision_ci": [
+    0.0,
+    0.7934567085261071
+   ],
+   "lift_ci": [
+    0.0,
+    2.060926515652226
+   ]
   },
   "RENAL": {
    "n": 800,
@@ -87,7 +114,8 @@
    "advance_rate": 0.0,
    "escalate_rate": 0.0,
    "advance_precision": null,
-   "escalate_precision": null
+   "escalate_precision": null,
+   "precision_lift": null
   },
   "HEMATO": {
    "n": 800,
@@ -95,9 +123,11 @@
    "advance_rate": 0.0,
    "escalate_rate": 0.0,
    "advance_precision": null,
-   "escalate_precision": null
+   "escalate_precision": null,
+   "precision_lift": null
   }
  },
+ "weighted_precision_lift": 1.5912178715081515,
  "risk_coverage": [
   {
    "coverage": 0.0249396621078037,

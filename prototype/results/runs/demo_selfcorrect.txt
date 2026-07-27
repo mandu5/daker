@@ -1,0 +1,54 @@
+==========================================================================
+먹줄(INKLINE) 실행 보고서   run_id=96a351b7f48a
+==========================================================================
+분자   CCN(CC)CC(=O)Nc1c(C)cccc1C
+       MW 234.3 · cLogP 2.58 · TPSA 32.3 · HBD 1  |  AD 1.00
+맥락   Phase 4 · Anesthesia, Local; Pain (비종양)
+구조경보 1건: ['basic_amine']
+개시용량 MRSD 19.35 mg/60kg (NOAEL 20 mg/kg rat → HED 3.226 → SF10)
+검정력 power=0.58 · 부족 → 필요 N≈101
+
+── 조항 판정 ────────────────────────────────────────────────────────────
+조항         분류              p_base   p_hat       Δ       Δ*      σ       T  판정         사유
+QT_ECG     template_baseline   0.078   0.072 -0.0054   —  0.004   —  기권         no_structural_trigger
+CYP_DDI    template_baseline   0.044   0.022 -0.0213   —  0.002   —  기권         no_structural_trigger
+HEPATIC    template_baseline   0.185   0.132 -0.0531   —  0.004   —  기권         no_structural_trigger
+RENAL      template_baseline   0.195   0.128 -0.0667   —  0.005   —  기권         no_structural_trigger
+HEMATO     template_baseline   0.098   0.040 -0.0576   —  0.004   —  기권         no_structural_trigger
+
+요약   발행 0 · 사람검토 0 · 기권 5  (기권율 100%)
+모집   등록가능 인구 0.0% 감소
+
+감사 DAG 해시  bc50e8905800826d3981053e11bcb3c3f3c85ba3392f9be8ddb38f8f2a046de5
+도구 버전       {'rdkit': '2026.03.4', 'scikit-learn': '1.9.0', 'scipy': '1.17.1', 'python': '3.11.15'}
+
+── 실행 추적 ────────────────────────────────────────────────────────────
+[ 0] MARKER     구조 경보 산출         1건 검출: ['basic_amine'] · AD=1.00
+[ 1] ACTUARY    개시용량 산출          NOAEL 20 mg/kg (rat) → HED 3.226 → SF10 → MRSD 0.3226 mg/kg = 19.35 mg/60kg
+[ 2] ACTUARY    검정력 게이트          N=60, 0.100→0.250 · power=0.58 · 부족 → 필요 N≈101
+[ 3] ORCHESTRATOR 라운드 1 시작         하향된 경보 없음
+[ 4] SCRIBE     조항 후보 기안         5종 · 분자특이 1종 · Δ 범위 [-0.067, -0.005]
+[ 5] ADVERSARY  R1 근거 확인         QT_ECG: ICH_E14 (body) 결박 · E14-QA-R3
+[ 6] ADVERSARY  R1 근거 반증         CYP_DDI: 근거 문서 ['ICH_M12'] 를 코퍼스에서 찾지 못함 → 격리
+[ 7] ORCHESTRATOR A1 재기안 불가        CYP_DDI: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)
+[ 8] ADVERSARY  R1 근거 반증         HEPATIC: 근거 문서 ['FDA_DILI'] 를 코퍼스에서 찾지 못함 → 격리
+[ 9] ORCHESTRATOR A1 재기안 불가        HEPATIC: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)
+[10] ADVERSARY  R1 근거 반증         RENAL: 근거 문서 ['FDA_RENAL_IMP'] 를 코퍼스에서 찾지 못함 → 격리
+[11] ORCHESTRATOR A1 재기안 불가        RENAL: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)
+[12] ADVERSARY  R1 근거 반증         HEMATO: 근거 문서 미특정 를 코퍼스에서 찾지 못함 → 격리
+[13] ORCHESTRATOR A1 재기안 불가        HEMATO: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)
+[14] ADVERSARY  R2 구조 귀속 검정      QT_ECG: Δ=-0.0054 · decoy 12개 평균 Δ=-0.0278(sd 0.0092) → Δ*=-0.0054 → 구조 유래 아님, 기각
+[15] LEDGER     선택적 발행           발행 0 · 사람검토 0 · 기권 5 (기권율 100%)
+[16] MARKER     A2 리스크 등급 하향     QT_ECG: ['R-basic_amine-00'] 를 트리거 자격에서 제외 (Case Bank 기록)
+[17] ACTUARY    모집 게이트           발행 조항 기준 등록가능 인구 0.0% 감소 · 통과
+[18] ORCHESTRATOR A4 계약 개정 요청      기권율 100% > 70% · 주 사유 'no_structural_trigger' → **사람에게 승격. 임계를 자동으로 낮추지 않는다**
+[19] ORCHESTRATOR 라운드 2 시작         하향된 경보 ['R-basic_amine-00']
+[20] SCRIBE     조항 후보 기안         5종 · 분자특이 0종 · Δ 범위 [-0.067, -0.005]
+[21] LEDGER     선택적 발행           발행 0 · 사람검토 0 · 기권 5 (기권율 100%)
+[22] ACTUARY    모집 게이트           발행 조항 기준 등록가능 인구 0.0% 감소 · 통과
+[23] ORCHESTRATOR A4 계약 개정 요청      기권율 100% > 70% · 주 사유 'no_structural_trigger' → **사람에게 승격. 임계를 자동으로 낮추지 않는다**
+[24] ORCHESTRATOR 라운드 2 수렴         이번 라운드 개선량 0 → 정지
+
+라운드 이력: [{"round": 1, "advance": 0, "escalate": 0, "abstain": 5, "downgraded": 1, "substituted": 0}, {"round": 2, "advance": 0, "escalate": 0, "abstain": 5, "downgraded": 0, "substituted": 0}]
+근거 격리 조항: ['CYP_DDI', 'HEPATIC', 'RENAL', 'HEMATO']
+계약 개정 요청: {"trigger": "abstain_rate_exceeded", "abstain_rate": 1.0, "dominant_reason": "no_structural_trigger", "action": "사람에게 계약 개정 요청 (자동 완화 금지)"}

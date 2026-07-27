@@ -1,0 +1,403 @@
+{
+ "run_id": "96a351b7f48a",
+ "clauses": [
+  {
+   "clause_id": "C-QT_ECG-00",
+   "clause_type": "QT_ECG",
+   "text": "QT 간격·심전도 모니터링 및 제외기준",
+   "clause_class": "template_baseline",
+   "trigger_risks": [],
+   "p_base": 0.07758301149950957,
+   "p_hat": 0.07220822837951302,
+   "delta": -0.0053747831199965485,
+   "delta_star": null,
+   "sigma": 0.0042814229030797265,
+   "ad": 1.0,
+   "trust": null,
+   "decision": "abstain",
+   "reason_code": "no_structural_trigger",
+   "provenance": {
+    "kind": "guideline",
+    "detail": "템플릿 기저 p_base=0.078 (Phase 4, 비종양) · 모델 p_hat=0.072",
+    "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/e14-clinical-evaluation-qtqtc-interval-prolongation-and-proarrhythmic-potential-non-antiarrhythmic",
+    "span_id": "E14-QA-R3",
+    "verified_at": "2026-07-26"
+   },
+   "sealed_falsifier": {
+    "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
+    "recorded_at": "pre-judgment",
+    "hash": "9a0b4bea62a428f52cb0093eac91d85ac99e09b8a5c1ebd60447ce468f75445f"
+   },
+   "mechanism": "",
+   "attribution_scope": null
+  },
+  {
+   "clause_id": "C-CYP_DDI-01",
+   "clause_type": "CYP_DDI",
+   "text": "CYP 효소 매개 약물상호작용 병용 제한",
+   "clause_class": "template_baseline",
+   "trigger_risks": [],
+   "p_base": 0.043525878446114295,
+   "p_hat": 0.022222222222222223,
+   "delta": -0.021303656223892072,
+   "delta_star": null,
+   "sigma": 0.0017277285834138118,
+   "ad": 1.0,
+   "trust": null,
+   "decision": "abstain",
+   "reason_code": "no_structural_trigger",
+   "provenance": {
+    "kind": "computed",
+    "detail": "템플릿 기저 p_base=0.044 (Phase 4, 비종양) · 모델 p_hat=0.022",
+    "url": "",
+    "span_id": "",
+    "verified_at": ""
+   },
+   "sealed_falsifier": {
+    "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
+    "recorded_at": "pre-judgment",
+    "hash": "975d4a1675790a37682d5edd9def509378b283e0c6763ee710995d109303cdd2"
+   },
+   "mechanism": "",
+   "attribution_scope": null
+  },
+  {
+   "clause_id": "C-HEPATIC-02",
+   "clause_type": "HEPATIC",
+   "text": "간기능 수치 기반 제외기준",
+   "clause_class": "template_baseline",
+   "trigger_risks": [],
+   "p_base": 0.18517634462712246,
+   "p_hat": 0.13205417607223477,
+   "delta": -0.05312216855488769,
+   "delta_star": null,
+   "sigma": 0.00395488323736587,
+   "ad": 1.0,
+   "trust": null,
+   "decision": "abstain",
+   "reason_code": "no_structural_trigger",
+   "provenance": {
+    "kind": "computed",
+    "detail": "템플릿 기저 p_base=0.185 (Phase 4, 비종양) · 모델 p_hat=0.132",
+    "url": "",
+    "span_id": "",
+    "verified_at": ""
+   },
+   "sealed_falsifier": {
+    "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
+    "recorded_at": "pre-judgment",
+    "hash": "91d2554819b38ba673b7496855b2f5294c9d80db50a255b00b370658217328e7"
+   },
+   "mechanism": "",
+   "attribution_scope": null
+  },
+  {
+   "clause_id": "C-RENAL-03",
+   "clause_type": "RENAL",
+   "text": "신기능 기반 제외기준",
+   "clause_class": "template_baseline",
+   "trigger_risks": [],
+   "p_base": 0.19460345800256518,
+   "p_hat": 0.12786177105831528,
+   "delta": -0.0667416869442499,
+   "delta_star": null,
+   "sigma": 0.005030900162320495,
+   "ad": 1.0,
+   "trust": null,
+   "decision": "abstain",
+   "reason_code": "no_structural_trigger",
+   "provenance": {
+    "kind": "computed",
+    "detail": "템플릿 기저 p_base=0.195 (Phase 4, 비종양) · 모델 p_hat=0.128",
+    "url": "",
+    "span_id": "",
+    "verified_at": ""
+   },
+   "sealed_falsifier": {
+    "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
+    "recorded_at": "pre-judgment",
+    "hash": "e7788826d2171216619471817f93ffa1053ae5f056e4a23c467894837fae1d7e"
+   },
+   "mechanism": "",
+   "attribution_scope": null
+  },
+  {
+   "clause_id": "C-HEMATO-04",
+   "clause_type": "HEMATO",
+   "text": "혈액학적 수치 기반 제외기준",
+   "clause_class": "template_baseline",
+   "trigger_risks": [],
+   "p_base": 0.0976217792550968,
+   "p_hat": 0.04,
+   "delta": -0.057621779255096796,
+   "delta_star": null,
+   "sigma": 0.003743676248918447,
+   "ad": 1.0,
+   "trust": null,
+   "decision": "abstain",
+   "reason_code": "no_structural_trigger",
+   "provenance": {
+    "kind": "computed",
+    "detail": "템플릿 기저 p_base=0.098 (Phase 4, 비종양) · 모델 p_hat=0.040",
+    "url": "",
+    "span_id": "",
+    "verified_at": ""
+   },
+   "sealed_falsifier": {
+    "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
+    "recorded_at": "pre-judgment",
+    "hash": "616276a90c8c861edfe04f2b980fd6448df94780b979511793f6e683fccb11bc"
+   },
+   "mechanism": "",
+   "attribution_scope": null
+  }
+ ],
+ "trace": [
+  {
+   "seq": 0,
+   "agent": "MARKER",
+   "step": "구조 경보 산출",
+   "detail": "1건 검출: ['basic_amine'] · AD=1.00"
+  },
+  {
+   "seq": 1,
+   "agent": "ACTUARY",
+   "step": "개시용량 산출",
+   "detail": "NOAEL 20 mg/kg (rat) → HED 3.226 → SF10 → MRSD 0.3226 mg/kg = 19.35 mg/60kg"
+  },
+  {
+   "seq": 2,
+   "agent": "ACTUARY",
+   "step": "검정력 게이트",
+   "detail": "N=60, 0.100→0.250 · power=0.58 · 부족 → 필요 N≈101"
+  },
+  {
+   "seq": 3,
+   "agent": "ORCHESTRATOR",
+   "step": "라운드 1 시작",
+   "detail": "하향된 경보 없음"
+  },
+  {
+   "seq": 4,
+   "agent": "SCRIBE",
+   "step": "조항 후보 기안",
+   "detail": "5종 · 분자특이 1종 · Δ 범위 [-0.067, -0.005]"
+  },
+  {
+   "seq": 5,
+   "agent": "ADVERSARY",
+   "step": "R1 근거 확인",
+   "detail": "QT_ECG: ICH_E14 (body) 결박 · E14-QA-R3"
+  },
+  {
+   "seq": 6,
+   "agent": "ADVERSARY",
+   "step": "R1 근거 반증",
+   "detail": "CYP_DDI: 근거 문서 ['ICH_M12'] 를 코퍼스에서 찾지 못함 → 격리"
+  },
+  {
+   "seq": 7,
+   "agent": "ORCHESTRATOR",
+   "step": "A1 재기안 불가",
+   "detail": "CYP_DDI: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)"
+  },
+  {
+   "seq": 8,
+   "agent": "ADVERSARY",
+   "step": "R1 근거 반증",
+   "detail": "HEPATIC: 근거 문서 ['FDA_DILI'] 를 코퍼스에서 찾지 못함 → 격리"
+  },
+  {
+   "seq": 9,
+   "agent": "ORCHESTRATOR",
+   "step": "A1 재기안 불가",
+   "detail": "HEPATIC: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)"
+  },
+  {
+   "seq": 10,
+   "agent": "ADVERSARY",
+   "step": "R1 근거 반증",
+   "detail": "RENAL: 근거 문서 ['FDA_RENAL_IMP'] 를 코퍼스에서 찾지 못함 → 격리"
+  },
+  {
+   "seq": 11,
+   "agent": "ORCHESTRATOR",
+   "step": "A1 재기안 불가",
+   "detail": "RENAL: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)"
+  },
+  {
+   "seq": 12,
+   "agent": "ADVERSARY",
+   "step": "R1 근거 반증",
+   "detail": "HEMATO: 근거 문서 미특정 를 코퍼스에서 찾지 못함 → 격리"
+  },
+  {
+   "seq": 13,
+   "agent": "ORCHESTRATOR",
+   "step": "A1 재기안 불가",
+   "detail": "HEMATO: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)"
+  },
+  {
+   "seq": 14,
+   "agent": "ADVERSARY",
+   "step": "R2 구조 귀속 검정",
+   "detail": "QT_ECG: Δ=-0.0054 · decoy 12개 평균 Δ=-0.0278(sd 0.0092) → Δ*=-0.0054 → 구조 유래 아님, 기각"
+  },
+  {
+   "seq": 15,
+   "agent": "LEDGER",
+   "step": "선택적 발행",
+   "detail": "발행 0 · 사람검토 0 · 기권 5 (기권율 100%)"
+  },
+  {
+   "seq": 16,
+   "agent": "MARKER",
+   "step": "A2 리스크 등급 하향",
+   "detail": "QT_ECG: ['R-basic_amine-00'] 를 트리거 자격에서 제외 (Case Bank 기록)"
+  },
+  {
+   "seq": 17,
+   "agent": "ACTUARY",
+   "step": "모집 게이트",
+   "detail": "발행 조항 기준 등록가능 인구 0.0% 감소 · 통과"
+  },
+  {
+   "seq": 18,
+   "agent": "ORCHESTRATOR",
+   "step": "A4 계약 개정 요청",
+   "detail": "기권율 100% > 70% · 주 사유 'no_structural_trigger' → **사람에게 승격. 임계를 자동으로 낮추지 않는다**"
+  },
+  {
+   "seq": 19,
+   "agent": "ORCHESTRATOR",
+   "step": "라운드 2 시작",
+   "detail": "하향된 경보 ['R-basic_amine-00']"
+  },
+  {
+   "seq": 20,
+   "agent": "SCRIBE",
+   "step": "조항 후보 기안",
+   "detail": "5종 · 분자특이 0종 · Δ 범위 [-0.067, -0.005]"
+  },
+  {
+   "seq": 21,
+   "agent": "LEDGER",
+   "step": "선택적 발행",
+   "detail": "발행 0 · 사람검토 0 · 기권 5 (기권율 100%)"
+  },
+  {
+   "seq": 22,
+   "agent": "ACTUARY",
+   "step": "모집 게이트",
+   "detail": "발행 조항 기준 등록가능 인구 0.0% 감소 · 통과"
+  },
+  {
+   "seq": 23,
+   "agent": "ORCHESTRATOR",
+   "step": "A4 계약 개정 요청",
+   "detail": "기권율 100% > 70% · 주 사유 'no_structural_trigger' → **사람에게 승격. 임계를 자동으로 낮추지 않는다**"
+  },
+  {
+   "seq": 24,
+   "agent": "ORCHESTRATOR",
+   "step": "라운드 2 수렴",
+   "detail": "이번 라운드 개선량 0 → 정지"
+  }
+ ],
+ "meta": {
+  "context": {
+   "phase": "Phase 4",
+   "indication": "Anesthesia, Local; Pain",
+   "oncology": false
+  },
+  "molecule": {
+   "smiles": "CCN(CC)CC(=O)Nc1c(C)cccc1C",
+   "mw": 234.343,
+   "clogp": 2.5837400000000006,
+   "tpsa": 32.34,
+   "hbd": 1
+  },
+  "ad": 1.0,
+  "risks": [
+   {
+    "risk_id": "R-basic_amine-00",
+    "flag": "basic_amine"
+   }
+  ],
+  "dose": {
+   "noael_mg_kg": 20,
+   "species": "rat",
+   "hed_factor": 6.2,
+   "hed_mg_kg": 3.225806451612903,
+   "safety_factor": 10.0,
+   "mrsd_mg_kg": 0.3225806451612903,
+   "mrsd_total_mg": 19.35483870967742,
+   "basis": "FDA 2005 Estimating the Maximum Safe Starting Dose (체표면적 환산)"
+  },
+  "power_gate": {
+   "detectable": false,
+   "power": 0.5801533989879304,
+   "required_n": 101
+  },
+  "feasibility": {
+   "pool_reduction": 0.0,
+   "exceeds": false,
+   "assumption": "제외기준 간 독립 가정. 실제로는 상관이 있어 감소폭이 과대추정될 수 있음"
+  },
+  "rounds": 2,
+  "round_history": [
+   {
+    "round": 1,
+    "advance": 0,
+    "escalate": 0,
+    "abstain": 5,
+    "downgraded": 1,
+    "substituted": 0
+   },
+   {
+    "round": 2,
+    "advance": 0,
+    "escalate": 0,
+    "abstain": 5,
+    "downgraded": 0,
+    "substituted": 0
+   }
+  ],
+  "redrafts": {},
+  "contract_escalation": {
+   "trigger": "abstain_rate_exceeded",
+   "abstain_rate": 1.0,
+   "dominant_reason": "no_structural_trigger",
+   "action": "사람에게 계약 개정 요청 (자동 완화 금지)"
+  },
+  "case_bank_entries": 1,
+  "n_train": 27593,
+  "confirmed_triggers": {
+   "QT_ECG": [
+    "basic_amine",
+    "herg_pharmacophore"
+   ],
+   "CYP_DDI": [
+    "halogenated_aromatic",
+    "lipophilic"
+   ],
+   "HEPATIC": [
+    "hydrazine"
+   ]
+  },
+  "tool_versions": {
+   "rdkit": "2026.03.4",
+   "scikit-learn": "1.9.0",
+   "scipy": "1.17.1",
+   "python": "3.11.15"
+  },
+  "evidence_isolated": [
+   "CYP_DDI",
+   "HEPATIC",
+   "RENAL",
+   "HEMATO"
+  ],
+  "seed": 20260807
+ },
+ "dag_hash": "bc50e8905800826d3981053e11bcb3c3f3c85ba3392f9be8ddb38f8f2a046de5"
+}

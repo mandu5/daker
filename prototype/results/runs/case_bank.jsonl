@@ -1,0 +1,1 @@
+{"run_id": "96a351b7f48a", "round": 1, "clause_type": "QT_ECG", "trigger_risks": ["R-basic_amine-00"], "reason_code": "not_structure_attributable", "detail": "Δ*≤0 → 경보 등급 하향", "delta": -0.0053747831199965485, "delta_star": -0.0053747831199965485}

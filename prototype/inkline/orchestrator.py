@@ -26,6 +26,7 @@ sys.path.insert(0, HERE)
 
 from agents import Actuary, Adversary, Ledger, Marker, Scribe, _t, sha  # noqa: E402
 from run import _versions  # noqa: E402
+from consistency import check as consistency_check, summarize  # noqa: E402
 from evidence import alternatives, lookup, weakest_tier  # noqa: E402
 from model import SAFETY_CLAUSES  # noqa: E402
 
@@ -122,7 +123,10 @@ class Orchestrator:
 
     # ── 본체 ─────────────────────────────────────────────────
     def run(self, smiles, context, noael=None, species="rat",
-            modality="small_molecule", n_enroll=60, budget_rounds=MAX_ROUNDS):
+            modality="small_molecule", n_enroll=60, budget_rounds=MAX_ROUNDS,
+            followups=None):
+        """followups: 프로토콜에 이미 들어 있는 후속 조치 식별자 집합.
+        비어 있으면 발행 조항이 요구하는 조치가 전부 누락된 것으로 본다."""
         trace = []
         run_id = sha([smiles, context, noael])[:12]
 
@@ -178,9 +182,21 @@ class Orchestrator:
 
             self.ledger.decide(clauses, trace=trace)
 
-            # 근거 격리된 조항은 발행 불가
+            # 근거 격리된 조항은 발행 불가.
+            # 다만 **안전성 조항의 불확실은 침묵이 아니라 승격**이어야 한다.
+            # 근거가 없다는 이유로 안전성 조항을 조용히 기권하면, 실무자는
+            # 그 조항을 검토할 기회 자체를 잃는다. 정합성 검사(C4)가 이 결함을
+            # 잡아냈고 여기서 근본 원인을 고친다.
             for c in clauses:
-                if getattr(c, "evidence", {}).get("isolated") and c.decision != "abstain":
+                if not getattr(c, "evidence", {}).get("isolated"):
+                    continue
+                if c.clause_type in SAFETY_CLAUSES and c.trigger_risks:
+                    # 할 말이 있는데(구조 트리거 존재) 근거를 확인하지 못한 경우만
+                    # 승격한다. 트리거조차 없으면 애초에 이 분자의 문제가 아니므로
+                    # 승격은 소음이 된다.
+                    c.decision = "escalate"
+                    c.reason_code = "safety_clause_evidence_missing"
+                elif c.decision != "abstain":
                     c.decision = "abstain"
                     c.reason_code = "evidence_not_in_corpus"
 
@@ -241,7 +257,28 @@ class Orchestrator:
             if rnd == budget_rounds:
                 _t(trace, "ORCHESTRATOR", "예산 소진", f"{budget_rounds} 라운드 도달")
 
+        # ── 조항 집합 내부 정합성 검사 ─────────────────────────
+        # 개별 조항이 각각 타당해도 집합으로 모순일 수 있다.
+        viol = consistency_check(clauses, context=context,
+                                 followups=followups, feasibility=feas)
+        cons = summarize(viol)
+        for v in viol:
+            _t(trace, "LEDGER", f"정합성 {v.severity}",
+               f"[{v.code}] {v.message} → {v.action}")
+        if not cons["publishable"]:
+            # blocking 위반이 있으면 발행을 철회하고 전부 사람 검토로 올린다.
+            blocked = {cid for v in viol if v.severity == "blocking"
+                       for cid in v.clause_ids}
+            for c in clauses:
+                if c.decision == "advance" and c.clause_id in blocked:
+                    c.decision = "escalate"
+                    c.reason_code = "blocked_by_consistency_check"
+            _t(trace, "LEDGER", "발행 철회",
+               f"정합성 blocking {cons['counts']['blocking']}건 → 해당 조항을 "
+               f"사람 검토로 되돌린다")
+
         meta = {
+            "consistency": cons,
             "context": context,
             "molecule": {k: props[k] for k in ("smiles", "mw", "clogp", "tpsa", "hbd")},
             "ad": props["ad"],

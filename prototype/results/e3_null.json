@@ -2,16 +2,16 @@
  "n_pairs": 8000,
  "decision_mix": {
   "advance": {
-   "n": 325,
-   "rate": 0.040625
+   "n": 127,
+   "rate": 0.015875
   },
   "escalate": {
-   "n": 180,
-   "rate": 0.0225
+   "n": 493,
+   "rate": 0.061625
   },
   "abstain": {
-   "n": 7495,
-   "rate": 0.936875
+   "n": 7380,
+   "rate": 0.9225
   }
  },
  "FOR_safety": {
@@ -27,86 +27,78 @@
   "definition": "실제 존재하는 안전성 조항 중 시스템이 명시적으로 '구조 유래 아님/신뢰도 미달'로 기각한 비율. 판단 보류(기권)는 제외."
  },
  "advance": {
-  "n": 325,
-  "coverage": 0.040625,
-  "precision": 0.17846153846153845,
+  "n": 127,
+  "coverage": 0.015875,
+  "precision": 0.23622047244094488,
   "precision_ci": [
-   0.1406621333089575,
-   0.22377350987000763
+   0.17077199899216422,
+   0.3171584451479258
   ],
-  "false_alarm_rate": 0.039596618715705176,
+  "false_alarm_rate": 0.01438528844727866,
   "far_ci": [
-   0.03519808344754357,
-   0.044519454311161166
+   0.011807060781937984,
+   0.017516526717137135
   ]
  },
  "advance_or_escalate": {
-  "n": 505,
-  "coverage": 0.063125,
-  "precision": 0.16237623762376238,
+  "n": 620,
+  "coverage": 0.0775,
+  "precision": 0.13709677419354838,
   "precision_ci": [
-   0.13277969789640573,
-   0.1970706916943824
+   0.11224850123395037,
+   0.16641454400060915
   ],
-  "false_alarm_rate": 0.06273172178555539,
+  "false_alarm_rate": 0.0793415393741658,
   "far_ci": [
-   0.05718930536850631,
-   0.0687720926284468
+   0.07312741941357556,
+   0.08603469875442767
   ]
  },
  "issue_everything_precision_pooled": 0.157125,
- "precision_lift_pooled_MISLEADING": 1.1357934030965058,
+ "precision_lift_pooled_MISLEADING": 1.5033920282637703,
  "by_clause": {
   "QT_ECG": {
    "n": 800,
    "base_rate": 0.20375,
-   "advance_rate": 0.16375,
-   "escalate_rate": 0.06625,
-   "advance_precision": 0.22137404580152673,
-   "escalate_precision": 0.1320754716981132,
-   "precision_lift": 1.0864983843019718,
+   "advance_rate": 0.11625,
+   "escalate_rate": 0.11375,
+   "advance_precision": 0.21505376344086022,
+   "escalate_precision": 0.17582417582417584,
+   "precision_lift": 1.0554785935747741,
    "advance_precision_ci": [
-    0.15878744351340543,
-    0.2998366012917585
+    0.14374913397362912,
+    0.3089654019282973
    ],
    "lift_ci": [
-    0.7793248761394131,
-    1.471590681186545
+    0.705517221956462,
+    1.5163946106910298
    ]
   },
   "CYP_DDI": {
    "n": 800,
    "base_rate": 0.10125,
-   "advance_rate": 0.11875,
-   "escalate_rate": 0.10125,
-   "advance_precision": 0.23157894736842105,
-   "escalate_precision": 0.14814814814814814,
-   "precision_lift": 2.287199480181936,
+   "advance_rate": 0.0425,
+   "escalate_rate": 0.1775,
+   "advance_precision": 0.29411764705882354,
+   "escalate_precision": 0.16901408450704225,
+   "precision_lift": 2.904865649963689,
    "advance_precision_ci": [
-    0.15819566451338007,
-    0.3258272570095415
+    0.16834452609931955,
+    0.4616922588146376
    ],
    "lift_ci": [
-    1.5624263161815315,
-    3.2180469828102862
+    1.662661986166119,
+    4.559923543848273
    ]
   },
   "HEPATIC": {
    "n": 800,
    "base_rate": 0.385,
-   "advance_rate": 0.00125,
-   "escalate_rate": 0.0,
-   "advance_precision": 0.0,
-   "escalate_precision": null,
-   "precision_lift": null,
-   "advance_precision_ci": [
-    0.0,
-    0.7934567085261071
-   ],
-   "lift_ci": [
-    0.0,
-    2.060926515652226
-   ]
+   "advance_rate": 0.0,
+   "escalate_rate": 0.00125,
+   "advance_precision": null,
+   "escalate_precision": 0.0,
+   "precision_lift": null
   },
   "RENAL": {
    "n": 800,
@@ -129,36 +121,20 @@
   "FOOD_EFFECT": {
    "n": 800,
    "base_rate": 0.03625,
-   "advance_rate": 0.015,
-   "escalate_rate": 0.01375,
-   "advance_precision": 0.0,
-   "escalate_precision": 0.18181818181818182,
-   "precision_lift": null,
-   "advance_precision_ci": [
-    0.0,
-    0.2425007574992425
-   ],
-   "lift_ci": [
-    0.0,
-    6.689676068944621
-   ]
+   "advance_rate": 0.0,
+   "escalate_rate": 0.1725,
+   "advance_precision": null,
+   "escalate_precision": 0.036231884057971016,
+   "precision_lift": null
   },
   "GI_IRRITATION": {
    "n": 800,
    "base_rate": 0.07125,
-   "advance_rate": 0.1075,
-   "escalate_rate": 0.04375,
-   "advance_precision": 0.08139534883720931,
-   "escalate_precision": 0.08571428571428572,
-   "precision_lift": 1.1423908608731133,
-   "advance_precision_ci": [
-    0.0399859229859802,
-    0.15860359456490936
-   ],
-   "lift_ci": [
-    0.5612059366453362,
-    2.2260153623145174
-   ]
+   "advance_rate": 0.0,
+   "escalate_rate": 0.15125,
+   "advance_precision": null,
+   "escalate_precision": 0.08264462809917356,
+   "precision_lift": null
   },
   "SEIZURE": {
    "n": 800,
@@ -188,7 +164,7 @@
    "precision_lift": null
   }
  },
- "weighted_precision_lift": 1.467502733961314,
+ "weighted_precision_lift": 1.5505900889859796,
  "risk_coverage": [
   {
    "coverage": 0.024980069093808132,

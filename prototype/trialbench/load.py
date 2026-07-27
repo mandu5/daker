@@ -74,6 +74,38 @@ CLAUSE_PATTERNS = {
         r"absolute neutrophil|\bANC\b|platelet count|h(a)?emoglobin"
         r"|neutropeni|thrombocytopeni",
     ),
+    # ── 2차 확장 (2026-07-26 추가) ────────────────────────────
+    # 기전 가설을 mechanism.py 에 **먼저 선언한 뒤** 이 패턴을 추가했다.
+    # 결과를 보고 조항을 고르지 않기 위한 순서다.
+    "GASTRIC_PH": (
+        "위산분비억제제(PPI·H2 차단제)·제산제 병용 제한 조항",
+        r"proton pump inhibitor|\bPPIs?\b|H2[- ]?(receptor )?antagonist"
+        r"|antacid|omeprazole|esomeprazole|lansoprazole|pantoprazole"
+        r"|ranitidine|famotidine|gastric pH",
+    ),
+    "HYPERSENS": (
+        "특정 약물계열 과민반응 병력 제외기준",
+        r"hypersensitivity|allerg(y|ic) (to|reaction)|anaphylax"
+        r"|known allergy|sulfa allergy",
+    ),
+    "FOOD_EFFECT": (
+        "음식·자몽 등 섭취 제한 조항",
+        r"grapefruit|seville orange|high[- ]fat meal|fasted state|with food"
+        r"|food effect|empty stomach",
+    ),
+    "GI_IRRITATION": (
+        "위장관 궤양·출혈 병력 제외기준",
+        r"peptic ulcer|gastrointestinal (bleed|h(a)?emorrhage|ulcer)"
+        r"|gastric ulcer|duodenal ulcer|\bGI bleed",
+    ),
+    "SEIZURE": (
+        "경련·발작 병력 제외기준",
+        r"seizure|epilep|convulsion",
+    ),
+    "THYROID": (
+        "갑상선 기능 관련 조항",
+        r"thyroid|\bTSH\b|hypothyroid|hyperthyroid|free T4",
+    ),
 }
 
 CLAUSE_RE = {k: re.compile(v[1], re.I) for k, v in CLAUSE_PATTERNS.items()}

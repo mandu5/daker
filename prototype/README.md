@@ -14,7 +14,7 @@ python3 prototype/trialbench/s2c_analysis.py   # 사전 선언 기전 게이트
 python3 prototype/inkline/evaluate.py          # E1 템플릿 대비 증분
 python3 prototype/inkline/calibrate.py         # 조항별 τ 보정
 python3 prototype/inkline/evaluate_e3.py       # E3 기권·오판
-python3 prototype/inkline/test_invariants.py   # 안전 불변식 22건
+python3 prototype/inkline/test_invariants.py   # 안전 불변식 35건
 
 python3 prototype/inkline/run.py --smiles "CC(=O)Oc1ccccc1C(=O)O" \
     --phase "Phase 2" --indication "hypertension" --noael 100 --repeat 3
@@ -39,7 +39,9 @@ inkline/      에이전트와 평가
   evaluate.py     E1 SAFE-INC
   evaluate_e3.py  E3 NULL (FOR_safety · 음성 대조 · risk-coverage)
   run.py          엔드투엔드 실행 + 감사 DAG 해시
-  test_invariants.py  안전 불변식 22건
+  test_invariants.py  안전 불변식 35건
+  extraction.py   자유서술 → 구조화 추출 어댑터(정규식/LLM). span 대조 실패 시 격리
+  viewer.py       감사 DAG 뷰어(자기완결 HTML)
 
 results/      산출물 (제안서가 이 JSON 들을 직접 읽는다)
 ```
@@ -68,16 +70,25 @@ results/      산출물 (제안서가 이 JSON 들을 직접 읽는다)
 술어로 표현 가능했다. LLM 이 정말 필요한 곳은 자유 서술형 원문에서 조항을
 추출하는 단계다.
 
-## 실측 요약 (2026-07-26)
+## 실측 요약 (2026-07-27, 조항 라벨러 감사 반영)
 
 | 지표 | 값 |
 |---|---|
 | 분석 대상 임상시험 | 39,379건 (고유 81,786건 중) |
 | 사전 선언 기전 가설 | 26쌍 → 확증 8 · 기각 15 (확증률 34.8%) |
 | 반대 방향으로 유의한 교과서적 기전 | 3건 (티오펜·마이클수용체·염기성아민→위산) |
-| FOR_safety (주지표) | 1.08% [0.59, 1.97] — 목표 2% 이하 통과 |
+| FOR_safety (주지표) | 0.12% [0.02, 0.67] — 목표 2% 이하 통과 |
 | 음성 대조 누출 | 0건 / 6,748쌍 |
-| CYP·DDI 발행분 정밀도 lift | 2.90배 |
-| 발행분 오경보율 | 0.014 (전역 임계 대비 2.9배 감소) |
+| 발행분 정밀도 | 0.301 [0.208, 0.414] · 발행 73건 |
+| CYP·DDI 정밀도 lift | 3.56배 [2.23, 5.25] |
+| QT·심전도 정밀도 lift | 2.93배 [1.57, 4.76] |
+| 발행분 오경보율 | 0.007 [0.0057, 0.0098] |
+| 기권율 | 91.7% (검토 대상 축소) |
 | 감사 DAG 재현성 | 3회 실행 해시 일치 |
-| 안전 불변식 테스트 | 22/22 통과 |
+| 안전 불변식 테스트 | 35/35 통과 |
+
+**라벨러 감사** — 조항 라벨이 정규식 v1 근사라는 한계를 한계로만 적어 두지 않고
+실제로 감사했다. QT 조항 양성의 61.2%가 "12-lead ECG will be performed" 류의
+**검사 시행 절차 나열**이었고, 음식효과 양성의 97.2%가 `grapefruit` 을 통해
+CYP·DDI 와 같은 신호를 두 번 세고 있었다. 둘을 고치자 모든 하위 지표가
+**좋아졌다** — 라벨 노이즈가 사전 선언 기전의 신호를 희석하고 있었다.

@@ -355,13 +355,13 @@
    "seq": 3,
    "agent": "ORCHESTRATOR",
    "step": "라운드 1 시작",
-   "detail": "하향된 경보 ['R-basic_amine-00']"
+   "detail": "하향된 경보 없음"
   },
   {
    "seq": 4,
    "agent": "SCRIBE",
    "step": "조항 후보 기안",
-   "detail": "10종 · 분자특이 0종 · Δ 범위 [-0.067, +0.074]"
+   "detail": "10종 · 분자특이 1종 · Δ 범위 [-0.067, +0.074]"
   },
   {
    "seq": 5,
@@ -479,26 +479,68 @@
   },
   {
    "seq": 24,
+   "agent": "ADVERSARY",
+   "step": "R2 구조 귀속 검정",
+   "detail": "QT_ECG: Δ=-0.0054 · decoy 12개 평균 Δ=-0.0278(sd 0.0092) → Δ*=-0.0054 → 구조 유래 아님, 기각"
+  },
+  {
+   "seq": 25,
    "agent": "LEDGER",
    "step": "선택적 발행",
    "detail": "발행 0 · 사람검토 0 · 기권 10 (기권율 100%)"
   },
   {
-   "seq": 25,
+   "seq": 26,
+   "agent": "MARKER",
+   "step": "A2 리스크 등급 하향",
+   "detail": "QT_ECG: ['R-basic_amine-00'] 를 트리거 자격에서 제외 (Case Bank 기록)"
+  },
+  {
+   "seq": 27,
    "agent": "ACTUARY",
    "step": "모집 게이트",
    "detail": "발행 조항 기준 등록가능 인구 0.0% 감소 · 통과"
   },
   {
-   "seq": 26,
+   "seq": 28,
    "agent": "ORCHESTRATOR",
    "step": "A4 계약 개정 요청",
    "detail": "기권율 100% > 70% · 주 사유 'no_structural_trigger' → **사람에게 승격. 임계를 자동으로 낮추지 않는다**"
   },
   {
-   "seq": 27,
+   "seq": 29,
    "agent": "ORCHESTRATOR",
-   "step": "라운드 1 수렴",
+   "step": "라운드 2 시작",
+   "detail": "하향된 경보 ['R-basic_amine-00']"
+  },
+  {
+   "seq": 30,
+   "agent": "SCRIBE",
+   "step": "조항 후보 기안",
+   "detail": "10종 · 분자특이 0종 · Δ 범위 [-0.067, +0.074]"
+  },
+  {
+   "seq": 31,
+   "agent": "LEDGER",
+   "step": "선택적 발행",
+   "detail": "발행 0 · 사람검토 0 · 기권 10 (기권율 100%)"
+  },
+  {
+   "seq": 32,
+   "agent": "ACTUARY",
+   "step": "모집 게이트",
+   "detail": "발행 조항 기준 등록가능 인구 0.0% 감소 · 통과"
+  },
+  {
+   "seq": 33,
+   "agent": "ORCHESTRATOR",
+   "step": "A4 계약 개정 요청",
+   "detail": "기권율 100% > 70% · 주 사유 'no_structural_trigger' → **사람에게 승격. 임계를 자동으로 낮추지 않는다**"
+  },
+  {
+   "seq": 34,
+   "agent": "ORCHESTRATOR",
+   "step": "라운드 2 수렴",
    "detail": "이번 라운드 개선량 0 → 정지"
   }
  ],
@@ -551,10 +593,18 @@
    "exceeds": false,
    "assumption": "제외기준 간 독립 가정. 실제로는 상관이 있어 감소폭이 과대추정될 수 있음"
   },
-  "rounds": 1,
+  "rounds": 2,
   "round_history": [
    {
     "round": 1,
+    "advance": 0,
+    "escalate": 0,
+    "abstain": 10,
+    "downgraded": 1,
+    "substituted": 0
+   },
+   {
+    "round": 2,
     "advance": 0,
     "escalate": 0,
     "abstain": 10,
@@ -610,5 +660,5 @@
   ],
   "seed": 20260807
  },
- "dag_hash": "4dbaaa10c8560163725d04cb598653d6bd162663cf3966f1fc0f6bc19da90ede"
+ "dag_hash": "97c660ccdb6d2d689023fa81f81e650bd66e991f2bef098e0fb549603c35cec3"
 }

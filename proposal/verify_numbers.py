@@ -51,27 +51,29 @@ CHECKS = [
      pair("basic_amine", "GASTRIC_PH")["lift"], 0.005),
     ("친유성→음식효과 lift", 1.91, pair("lipophilic", "FOOD_EFFECT")["lift"], 0.005),
     ("확증률(%)", 34.8, S2C["confirmatory_rate"] * 100, 0.05),
-    ("B-RULE ΔAUPRC", -0.086, E1["mean_delta_auprc"]["B-RULE"], 0.0005),
-    ("FOR_safety(%)", 1.08, E3["FOR_safety"]["rate"] * 100, 0.005),
+    ("B-RULE ΔAUPRC", -0.074, E1["mean_delta_auprc"]["B-RULE"], 0.0005),
+    ("FOR_safety(%)", 0.12, E3["FOR_safety"]["rate"] * 100, 0.005),
     ("음성대조 쌍 수", 6748, E3["negative_control"]["n"], 0),
     ("음성대조 발행률", 0.0, E3["negative_control"]["advance_rate"], 1e-9),
     ("기권율(%)", 92, E3["decision_mix"]["abstain"]["rate"] * 100, 0.5),
-    ("CYP·DDI 정밀도 lift", 2.90,
+    ("CYP·DDI 정밀도 lift", 3.56,
      E3["by_clause"]["CYP_DDI"]["precision_lift"], 0.005),
-    ("발행분 정밀도", 0.236, E3["advance"]["precision"], 0.0005),
-    ("발행분 오경보율", 0.014, E3["advance"]["false_alarm_rate"], 0.0005),
-    ("CYP·DDI τ", 2.278, TAU["per_clause"]["CYP_DDI"]["tau"], 0.001),
-    ("QT τ", 1.499, TAU["per_clause"]["QT_ECG"]["tau"], 0.001),
+    ("QT 정밀도 lift", 2.93, E3["by_clause"]["QT_ECG"]["precision_lift"], 0.005),
+    ("hERG→QT lift", 1.62, pair("herg_pharmacophore", "QT_ECG")["lift"], 0.005),
+    ("발행분 정밀도", 0.301, E3["advance"]["precision"], 0.0005),
+    ("발행분 오경보율", 0.007, E3["advance"]["false_alarm_rate"], 0.0005),
+    ("CYP·DDI τ", 2.037, TAU["per_clause"]["CYP_DDI"]["tau"], 0.001),
+    ("QT τ", 2.366, TAU["per_clause"]["QT_ECG"]["tau"], 0.001),
     ("보정 후 발행 자격 조항 수", 2,
      sum(1 for v in TAU["per_clause"].values() if not v.get("sealed")), 0),
-    ("E1 확증군 ΔP@5%", 0.035,
+    ("E1 확증군 ΔP@5%", 0.050,
      E1["mechanism_split"]["confirmed_delta_p"]["0.05"], 0.0005),
     ("E1 미확증군 ΔP@5%", 0.044,
      E1["mechanism_split"]["exploratory_delta_p"]["0.05"], 0.0005),
-    ("CYP·DDI 템플릿 P@5%", 0.234,
+    ("CYP·DDI 템플릿 P@5%", 0.216,
      E1["clauses"]["CYP_DDI"]["precision_at_coverage"]["B-TPL"]["0.05"]["precision"],
      0.0005),
-    ("CYP·DDI 먹줄 P@5%", 0.314,
+    ("CYP·DDI 먹줄 P@5%", 0.309,
      E1["clauses"]["CYP_DDI"]["precision_at_coverage"]["INKLINE+"]["0.05"]["precision"],
      0.0005),
 ]
@@ -82,8 +84,8 @@ def check_delta_star():
     for c in RUN["clauses"]:
         if c["clause_type"] == "QT_ECG":
             share = c["delta_star"] / c["delta"] if c["delta"] else None
-            return ("시연분자 QT 구조귀속분(%)", 27, share * 100 if share else None, 1.0)
-    return ("시연분자 QT 구조귀속분(%)", 27, None, 1.0)
+            return ("시연분자 QT 구조귀속분(%)", 100, share * 100 if share else None, 1.0)
+    return ("시연분자 QT 구조귀속분(%)", 100, None, 1.0)
 
 
 def main():
@@ -107,11 +109,11 @@ def main():
     tpl = c["B-TPL"]["0.05"]["precision"]
     ink = c["INKLINE+"]["0.05"]["precision"]
     saving = 1 - tpl / ink
-    ok = abs(saving - 0.254) <= 0.005
-    print(f"{'검토량 절감(%)':28s} {25.4:>10} {saving*100:>10.1f}  "
+    ok = abs(saving - 0.302) <= 0.006
+    print(f"{'검토량 절감(%)':28s} {30.2:>10} {saving*100:>10.1f}  "
           f"{'OK' if ok else '불일치'}")
     if not ok:
-        bad.append(("검토량 절감", 25.4, saving * 100))
+        bad.append(("검토량 절감", 30.2, saving * 100))
 
     print()
     if bad:

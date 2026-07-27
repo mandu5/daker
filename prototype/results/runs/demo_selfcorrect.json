@@ -5,20 +5,22 @@
    "clause_id": "C-QT_ECG-00",
    "clause_type": "QT_ECG",
    "text": "QT 간격·심전도 모니터링 및 제외기준",
-   "clause_class": "template_baseline",
-   "trigger_risks": [],
-   "p_base": 0.07758301149950957,
-   "p_hat": 0.07220822837951302,
-   "delta": -0.0053747831199965485,
-   "delta_star": null,
-   "sigma": 0.0042814229030797265,
+   "clause_class": "molecule_specific",
+   "trigger_risks": [
+    "R-basic_amine-00"
+   ],
+   "p_base": 0.035335824133277315,
+   "p_hat": 0.04650222401940962,
+   "delta": 0.011166399886132307,
+   "delta_star": 0.011166399886132307,
+   "sigma": 0.003664594595060287,
    "ad": 1.0,
-   "trust": null,
-   "decision": "abstain",
-   "reason_code": "no_structural_trigger",
+   "trust": 0.4718610260267533,
+   "decision": "escalate",
+   "reason_code": "safety_clause_mandatory_review",
    "provenance": {
     "kind": "guideline",
-    "detail": "템플릿 기저 p_base=0.078 (Phase 4, 비종양) · 모델 p_hat=0.072",
+    "detail": "템플릿 기저 p_base=0.035 (Phase 4, 비종양) · 모델 p_hat=0.047",
     "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/e14-clinical-evaluation-qtqtc-interval-prolongation-and-proarrhythmic-potential-non-antiarrhythmic",
     "span_id": "E14-QA-R3",
     "verified_at": "2026-07-26"
@@ -28,10 +30,19 @@
     "recorded_at": "pre-judgment",
     "hash": "9a0b4bea62a428f52cb0093eac91d85ac99e09b8a5c1ebd60447ce468f75445f"
    },
-   "mechanism": "",
-   "attribution_scope": null,
-   "tau": 1.498992328278209,
-   "tau_low": 1.498992328278209,
+   "mechanism": "양성자화 염기성 질소가 hERG 포어 방향족 잔기와 상호작용하는 고전적 약리단 요소",
+   "attribution_scope": {
+    "ablatable": [
+     "basic_amine"
+    ],
+    "property_only": [],
+    "n_decoy": 12,
+    "mean_decoy_delta": -0.01578701706590207,
+    "sd_decoy_delta": 0.0051207248708581565,
+    "structure_share": 1.0
+   },
+   "tau": 2.3658665358354893,
+   "tau_low": 1.7115578961214708,
    "issuance_sealed": false
   },
   {
@@ -40,18 +51,18 @@
    "text": "CYP 효소 매개 약물상호작용 병용 제한",
    "clause_class": "template_baseline",
    "trigger_risks": [],
-   "p_base": 0.043525878446114295,
-   "p_hat": 0.022222222222222223,
-   "delta": -0.021303656223892072,
+   "p_base": 0.03769789714135606,
+   "p_hat": 0.020905923344947737,
+   "delta": -0.016791973796408323,
    "delta_star": null,
-   "sigma": 0.0017277285834138118,
+   "sigma": 0.0017839981803038534,
    "ad": 1.0,
    "trust": null,
    "decision": "abstain",
    "reason_code": "no_structural_trigger",
    "provenance": {
     "kind": "guideline",
-    "detail": "템플릿 기저 p_base=0.044 (Phase 4, 비종양) · 모델 p_hat=0.022",
+    "detail": "템플릿 기저 p_base=0.038 (Phase 4, 비종양) · 모델 p_hat=0.021",
     "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/m12-drug-interaction-studies",
     "span_id": "M12-2024-08",
     "verified_at": "2026-07-27"
@@ -63,8 +74,8 @@
    },
    "mechanism": "",
    "attribution_scope": null,
-   "tau": 2.2780327491015884,
-   "tau_low": 1.905659409559873,
+   "tau": 2.037265180587233,
+   "tau_low": 2.037265180587233,
    "issuance_sealed": false
   },
   {
@@ -469,66 +480,30 @@
    "seq": 22,
    "agent": "ADVERSARY",
    "step": "R2 구조 귀속 검정",
-   "detail": "QT_ECG: Δ=-0.0054 · decoy 12개 평균 Δ=-0.0278(sd 0.0092) → Δ*=-0.0054 → 구조 유래 아님, 기각"
+   "detail": "QT_ECG: Δ=+0.0112 · decoy 12개 평균 Δ=-0.0158(sd 0.0051) → Δ*=+0.0112 · 구조 귀속분 100%"
   },
   {
    "seq": 23,
    "agent": "LEDGER",
    "step": "선택적 발행",
-   "detail": "발행 0 · 사람검토 0 · 기권 10 (기권율 100%)"
+   "detail": "발행 0 · 사람검토 1 · 기권 9 (기권율 90%)"
   },
   {
    "seq": 24,
-   "agent": "MARKER",
-   "step": "A2 리스크 등급 하향",
-   "detail": "QT_ECG: ['R-basic_amine-00'] 를 트리거 자격에서 제외 (Case Bank 기록)"
-  },
-  {
-   "seq": 25,
    "agent": "ACTUARY",
    "step": "모집 게이트",
    "detail": "발행 조항 기준 등록가능 인구 0.0% 감소 · 통과"
+  },
+  {
+   "seq": 25,
+   "agent": "ORCHESTRATOR",
+   "step": "A4 계약 개정 요청",
+   "detail": "기권율 90% > 70% · 주 사유 'no_structural_trigger' → **사람에게 승격. 임계를 자동으로 낮추지 않는다**"
   },
   {
    "seq": 26,
    "agent": "ORCHESTRATOR",
-   "step": "A4 계약 개정 요청",
-   "detail": "기권율 100% > 70% · 주 사유 'no_structural_trigger' → **사람에게 승격. 임계를 자동으로 낮추지 않는다**"
-  },
-  {
-   "seq": 27,
-   "agent": "ORCHESTRATOR",
-   "step": "라운드 2 시작",
-   "detail": "하향된 경보 ['R-basic_amine-00']"
-  },
-  {
-   "seq": 28,
-   "agent": "SCRIBE",
-   "step": "조항 후보 기안",
-   "detail": "10종 · 분자특이 0종 · Δ 범위 [-0.067, +0.074]"
-  },
-  {
-   "seq": 29,
-   "agent": "LEDGER",
-   "step": "선택적 발행",
-   "detail": "발행 0 · 사람검토 0 · 기권 10 (기권율 100%)"
-  },
-  {
-   "seq": 30,
-   "agent": "ACTUARY",
-   "step": "모집 게이트",
-   "detail": "발행 조항 기준 등록가능 인구 0.0% 감소 · 통과"
-  },
-  {
-   "seq": 31,
-   "agent": "ORCHESTRATOR",
-   "step": "A4 계약 개정 요청",
-   "detail": "기권율 100% > 70% · 주 사유 'no_structural_trigger' → **사람에게 승격. 임계를 자동으로 낮추지 않는다**"
-  },
-  {
-   "seq": 32,
-   "agent": "ORCHESTRATOR",
-   "step": "라운드 2 수렴",
+   "step": "라운드 1 수렴",
    "detail": "이번 라운드 개선량 0 → 정지"
   }
  ],
@@ -581,21 +556,13 @@
    "exceeds": false,
    "assumption": "제외기준 간 독립 가정. 실제로는 상관이 있어 감소폭이 과대추정될 수 있음"
   },
-  "rounds": 2,
+  "rounds": 1,
   "round_history": [
    {
     "round": 1,
     "advance": 0,
-    "escalate": 0,
-    "abstain": 10,
-    "downgraded": 1,
-    "substituted": 0
-   },
-   {
-    "round": 2,
-    "advance": 0,
-    "escalate": 0,
-    "abstain": 10,
+    "escalate": 1,
+    "abstain": 9,
     "downgraded": 0,
     "substituted": 0
    }
@@ -603,11 +570,11 @@
   "redrafts": {},
   "contract_escalation": {
    "trigger": "abstain_rate_exceeded",
-   "abstain_rate": 1.0,
+   "abstain_rate": 0.9,
    "dominant_reason": "no_structural_trigger",
    "action": "사람에게 계약 개정 요청 (자동 완화 금지)"
   },
-  "case_bank_entries": 1,
+  "case_bank_entries": 0,
   "n_train": 27593,
   "confirmed_triggers": {
    "QT_ECG": [
@@ -646,5 +613,5 @@
   ],
   "seed": 20260807
  },
- "dag_hash": "7a6e17e15804a9b8519615f9fade1dbdc52d9a13eb8a2f26f9847c3792990dda"
+ "dag_hash": "067a1f5ee00e0d5438ab6df16865a8c38643b98e26977023e8abe409dd7aba91"
 }

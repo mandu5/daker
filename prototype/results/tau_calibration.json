@@ -1,29 +1,15 @@
 {
  "target_precision": 0.3,
  "n_calib_trials": 2500,
- "n_pairs": 1782,
+ "n_pairs": 1884,
  "min_advance_n": 20,
  "escalate_recall": 0.5,
  "per_clause": {
   "QT_ECG": {
-   "n_candidates": 562,
-   "base_rate": 0.2402135231316726,
-   "tau": 1.498992328278209,
-   "tau_low": 1.498992328278209,
-   "sealed": false,
-   "advance_n": 283,
-   "advance_precision": 0.3003533568904594,
-   "precision_ci": [
-    0.24990919702144365,
-    0.3561451549275066
-   ],
-   "lift_vs_base": 1.250359900536579
-  },
-  "CYP_DDI": {
-   "n_candidates": 491,
-   "base_rate": 0.1446028513238289,
-   "tau": 2.2780327491015884,
-   "tau_low": 1.905659409559873,
+   "n_candidates": 654,
+   "base_rate": 0.12996941896024464,
+   "tau": 2.3658665358354893,
+   "tau_low": 1.7115578961214708,
    "sealed": false,
    "advance_n": 76,
    "advance_precision": 0.3026315789473684,
@@ -31,7 +17,21 @@
     0.21091189301319777,
     0.41334413392013025
    ],
-   "lift_vs_base": 2.0928465530022238
+   "lift_vs_base": 2.3284829721362232
+  },
+  "CYP_DDI": {
+   "n_candidates": 501,
+   "base_rate": 0.12574850299401197,
+   "tau": 2.037265180587233,
+   "tau_low": 2.037265180587233,
+   "sealed": false,
+   "advance_n": 113,
+   "advance_precision": 0.3008849557522124,
+   "precision_ci": [
+    0.22401098815624215,
+    0.3908522112521877
+   ],
+   "lift_vs_base": 2.3927517909818796
   },
   "HEPATIC": {
    "n_candidates": 9,

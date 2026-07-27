@@ -10,18 +10,18 @@
     "R-basic_amine-00",
     "R-herg_pharmacophore-12"
    ],
-   "p_base": 0.3197287577427781,
-   "p_hat": 0.4973474801061008,
-   "delta": 0.1776187223633227,
-   "delta_star": 0.048182077981669874,
-   "sigma": 0.014329698994764599,
+   "p_base": 0.21657467086302024,
+   "p_hat": 0.30561330561330563,
+   "delta": 0.0890386347502854,
+   "delta_star": 0.0890386347502854,
+   "sigma": 0.01737781557893528,
    "ad": 0.3139534890651703,
-   "trust": 0.4406368810592335,
+   "trust": 0.7478765039764717,
    "decision": "escalate",
    "reason_code": "safety_clause_mandatory_review",
    "provenance": {
     "kind": "guideline",
-    "detail": "템플릿 기저 p_base=0.320 (Phase 1, 종양) · 모델 p_hat=0.497",
+    "detail": "템플릿 기저 p_base=0.217 (Phase 1, 종양) · 모델 p_hat=0.306",
     "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/e14-clinical-evaluation-qtqtc-interval-prolongation-and-proarrhythmic-potential-non-antiarrhythmic",
     "span_id": "E14-QA-R3",
     "verified_at": "2026-07-26"
@@ -39,12 +39,12 @@
     ],
     "property_only": [],
     "n_decoy": 12,
-    "mean_decoy_delta": 0.12943664438165284,
-    "sd_decoy_delta": 2.7755575615628914e-17,
-    "structure_share": 0.2712668875250237
+    "mean_decoy_delta": -0.002892860982981455,
+    "sd_decoy_delta": 0.011116743324981684,
+    "structure_share": 1.0
    },
-   "tau": 1.498992328278209,
-   "tau_low": 1.498992328278209,
+   "tau": 2.3658665358354893,
+   "tau_low": 1.7115578961214708,
    "issuance_sealed": false
   },
   {
@@ -56,18 +56,18 @@
     "R-halogenated_aromatic-07",
     "R-lipophilic-13"
    ],
-   "p_base": 0.24040301809417097,
-   "p_hat": 0.3300970873786408,
-   "delta": 0.08969406928446982,
-   "delta_star": 0.05719119076279385,
-   "sigma": 0.00885533283371744,
+   "p_base": 0.23158345038264783,
+   "p_hat": 0.32459016393442625,
+   "delta": 0.09300671355177842,
+   "delta_star": 0.08407004687021123,
+   "sigma": 0.01176844929128666,
    "ad": 0.3139534890651703,
-   "trust": 0.6222549567264053,
+   "trust": 0.8308269723449956,
    "decision": "escalate",
    "reason_code": "safety_clause_mandatory_review",
    "provenance": {
     "kind": "guideline",
-    "detail": "템플릿 기저 p_base=0.240 (Phase 1, 종양) · 모델 p_hat=0.330",
+    "detail": "템플릿 기저 p_base=0.232 (Phase 1, 종양) · 모델 p_hat=0.325",
     "url": "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/m12-drug-interaction-studies",
     "span_id": "M12-2024-08",
     "verified_at": "2026-07-27"
@@ -86,12 +86,12 @@
      "lipophilic"
     ],
     "n_decoy": 12,
-    "mean_decoy_delta": 0.03250287852167597,
-    "sd_decoy_delta": 0.007482114879603598,
-    "structure_share": 0.6376251096536689
+    "mean_decoy_delta": 0.008936666681567187,
+    "sd_decoy_delta": 0.014089204795823736,
+    "structure_share": 0.9039137462201372
    },
-   "tau": 2.2780327491015884,
-   "tau_low": 1.905659409559873,
+   "tau": 2.037265180587233,
+   "tau_low": 2.037265180587233,
    "issuance_sealed": false
   },
   {
@@ -402,7 +402,7 @@
    "seq": 4,
    "agent": "SCRIBE",
    "step": "조항 후보 기안",
-   "detail": "10종 · 분자특이 3종 · Δ 범위 [-0.199, +0.178]"
+   "detail": "10종 · 분자특이 3종 · Δ 범위 [-0.199, +0.109]"
   },
   {
    "seq": 5,
@@ -510,13 +510,13 @@
    "seq": 22,
    "agent": "ADVERSARY",
    "step": "R2 구조 귀속 검정",
-   "detail": "QT_ECG: Δ=+0.1776 · decoy 12개 평균 Δ=+0.1294(sd 0.0000) → Δ*=+0.0482 · 구조 귀속분 27%"
+   "detail": "QT_ECG: Δ=+0.0890 · decoy 12개 평균 Δ=-0.0029(sd 0.0111) → Δ*=+0.0890 · 구조 귀속분 100%"
   },
   {
    "seq": 23,
    "agent": "ADVERSARY",
    "step": "R2 구조 귀속 검정",
-   "detail": "CYP_DDI: Δ=+0.0897 · decoy 12개 평균 Δ=+0.0325(sd 0.0075) → Δ*=+0.0572 · 구조 귀속분 64%"
+   "detail": "CYP_DDI: Δ=+0.0930 · decoy 12개 평균 Δ=+0.0089(sd 0.0141) → Δ*=+0.0841 · 구조 귀속분 90%"
   },
   {
    "seq": 24,
@@ -667,5 +667,5 @@
   ],
   "seed": 20260807
  },
- "dag_hash": "8c779ee3f5a2227e66a58e427c692892b4b828e0137b5e74e19a522a9759e7d1"
+ "dag_hash": "46a427fe26fbc0e7c2b616c2ce9f9d52f4aa5709cc2c1a6870cfcf358df91616"
 }

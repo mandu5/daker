@@ -10,8 +10,8 @@
 
 ── 조항 판정 ────────────────────────────────────────────────────────────
 조항         분류              p_base   p_hat       Δ       Δ*      σ       T  판정         사유
-QT_ECG     molecule_specific   0.320   0.497 +0.1776  +0.0482  0.014    0.44  사람검토       safety_clause_mandatory_review
-CYP_DDI    molecule_specific   0.240   0.330 +0.0897  +0.0572  0.009    0.62  사람검토       safety_clause_mandatory_review
+QT_ECG     molecule_specific   0.217   0.306 +0.0890  +0.0890  0.017    0.75  사람검토       safety_clause_mandatory_review
+CYP_DDI    molecule_specific   0.232   0.325 +0.0930  +0.0841  0.012    0.83  사람검토       safety_clause_mandatory_review
 HEPATIC    template_baseline   0.655   0.489 -0.1656   —  0.009   —  기권         no_structural_trigger
 RENAL      template_baseline   0.437   0.313 -0.1242   —  0.012   —  기권         no_structural_trigger
 HEMATO     template_baseline   0.549   0.350 -0.1991   —  0.009   —  기권         no_structural_trigger
@@ -24,7 +24,7 @@ THYROID    template_baseline   0.067   0.076 +0.0086   —  0.006   —  기권 
 요약   발행 0 · 사람검토 2 · 기권 8  (기권율 80%)
 모집   등록가능 인구 0.0% 감소
 
-감사 DAG 해시  8c779ee3f5a2227e66a58e427c692892b4b828e0137b5e74e19a522a9759e7d1
+감사 DAG 해시  46a427fe26fbc0e7c2b616c2ce9f9d52f4aa5709cc2c1a6870cfcf358df91616
 도구 버전       {'rdkit': '2026.03.4', 'scikit-learn': '1.9.0', 'scipy': '1.17.1', 'python': '3.11.15'}
 
 ── 실행 추적 ────────────────────────────────────────────────────────────
@@ -32,7 +32,7 @@ THYROID    template_baseline   0.067   0.076 +0.0086   —  0.006   —  기권 
 [ 1] ACTUARY    개시용량 산출          NOAEL 25.0 mg/kg (rat) → HED 4.032 → SF10 → MRSD 0.4032 mg/kg = 24.19 mg/60kg
 [ 2] ACTUARY    검정력 게이트          N=60, 0.100→0.250 · power=0.58 · 부족 → 필요 N≈101
 [ 3] ORCHESTRATOR 라운드 1 시작         하향된 경보 없음
-[ 4] SCRIBE     조항 후보 기안         10종 · 분자특이 3종 · Δ 범위 [-0.199, +0.178]
+[ 4] SCRIBE     조항 후보 기안         10종 · 분자특이 3종 · Δ 범위 [-0.199, +0.109]
 [ 5] ADVERSARY  R1 근거 확인         QT_ECG: ICH_E14 (body) 결박 · E14-QA-R3
 [ 6] ADVERSARY  R1 근거 확인         CYP_DDI: ICH_M12 (body) 결박 · M12-2024-08
 [ 7] ADVERSARY  R1 근거 확인         HEPATIC: FDA_DILI_2009 (body) 결박 · DILI-2009-07
@@ -50,13 +50,12 @@ THYROID    template_baseline   0.067   0.076 +0.0086   —  0.006   —  기권 
 [19] ORCHESTRATOR A1 재기안 불가        GASTRIC_PH: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)
 [20] ADVERSARY  R1 근거 반증         THYROID: 근거 문서 미특정 를 코퍼스에서 찾지 못함 → 격리
 [21] ORCHESTRATOR A1 재기안 불가        THYROID: 대체 근거 경로가 등록되어 있지 않음 → 즉시 격리 확정 (본선에서 코퍼스 확장 대상)
-[22] ADVERSARY  R2 구조 귀속 검정      QT_ECG: Δ=+0.1776 · decoy 12개 평균 Δ=+0.1294(sd 0.0000) → Δ*=+0.0482 · 구조 귀속분 27%
-[23] ADVERSARY  R2 구조 귀속 검정      CYP_DDI: Δ=+0.0897 · decoy 12개 평균 Δ=+0.0325(sd 0.0075) → Δ*=+0.0572 · 구조 귀속분 64%
+[22] ADVERSARY  R2 구조 귀속 검정      QT_ECG: Δ=+0.0890 · decoy 12개 평균 Δ=-0.0029(sd 0.0111) → Δ*=+0.0890 · 구조 귀속분 100%
+[23] ADVERSARY  R2 구조 귀속 검정      CYP_DDI: Δ=+0.0930 · decoy 12개 평균 Δ=+0.0089(sd 0.0141) → Δ*=+0.0841 · 구조 귀속분 90%
 [24] ADVERSARY  R2 구조 귀속 검정      FOOD_EFFECT: Δ=+0.1068 · decoy 12개 평균 Δ=+0.0207(sd 0.0110) → Δ*=+0.0861 · 구조 귀속분 81%
 [25] LEDGER     선택적 발행           발행 0 · 사람검토 3 · 기권 7 (기권율 70%) · 보정에서 발행 봉인된 조항 1종
 [26] ACTUARY    모집 게이트           발행 조항 기준 등록가능 인구 0.0% 감소 · 통과
 [27] ORCHESTRATOR A4 계약 개정 요청      기권율 80% > 70% · 주 사유 'no_structural_trigger' → **사람에게 승격. 임계를 자동으로 낮추지 않는다**
 [28] ORCHESTRATOR 라운드 1 수렴         이번 라운드 개선량 0 → 정지
 
-라운드 이력: [{"round": 1, "advance": 0, "escalate": 2, "abstain": 8, "downgraded": 0, "substituted": 0}]
-정합성: {"blocking": 0, "warning": 0, "info": 0}
+라운드: [{"round": 1, "advance": 0, "escalate": 2, "abstain": 8, "downgraded": 0, "substituted": 0}]

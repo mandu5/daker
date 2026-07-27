@@ -393,7 +393,9 @@ def fig_run():
     ICON = {"advance": ("발행", OK), "escalate": ("사람검토", "#C98A17"),
             "abstain": ("기권", REJ)}
     KO = {"QT_ECG": "QT·심전도", "CYP_DDI": "CYP·약물상호작용",
-          "HEPATIC": "간기능", "RENAL": "신기능", "HEMATO": "혈액학적"}
+          "HEPATIC": "간기능", "RENAL": "신기능", "HEMATO": "혈액학적",
+          "FOOD_EFFECT": "음식·자몽 제한", "GI_IRRITATION": "위장관 궤양",
+          "SEIZURE": "경련 병력", "GASTRIC_PH": "위산분비억제제", "THYROID": "갑상선"}
 
     head = (f"<div style='background:{NAVY};color:#fff;border-radius:6px 6px 0 0;"
             f"padding:7px 11px;font-size:10.5px;line-height:1.45;'>"
@@ -405,7 +407,11 @@ def fig_run():
             f"</div>")
 
     rows = []
-    for c in rec["clauses"]:
+    shown = [c for c in rec["clauses"]
+             if c["decision"] != "abstain"
+             or c["reason_code"] != "no_structural_trigger"]
+    hidden = len(rec["clauses"]) - len(shown)
+    for c in shown:
         lab, tone = ICON[c["decision"]]
         ds = "—" if c["delta_star"] is None else f"{c['delta_star']:+.4f}"
         tr = "—" if c["trust"] is None else f"{c['trust']:.2f}"
@@ -426,6 +432,11 @@ def fig_run():
             f"color:{tone};white-space:nowrap;'>{lab}</td>"
             f"<td style='padding:3px 5px;font-size:8.8px;color:#777;'>"
             f"{c['reason_code']}</td></tr>")
+    if hidden:
+        rows.append(
+            f"<tr><td colspan='8' style='padding:3px 6px;font-size:9.3px;"
+            f"color:#5A5A5A;'>구조 트리거가 없어 판단 대상이 아닌 조항 "
+            f"{hidden}종은 생략(전부 기권)</td></tr>")
     hdr = ("<tr style='background:#DCE7F1;'>" + "".join(
         f"<th style='padding:3px 6px;font-size:9px;color:{NAVY};'>{h}</th>"
         for h in ["조항", "분류", "템플릿 기저", "Δ 증분", "Δ* 구조귀속",

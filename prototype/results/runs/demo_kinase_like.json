@@ -1,0 +1,307 @@
+{
+ "run_id": "d98c4f6eeffe",
+ "clauses": [
+  {
+   "clause_id": "C-QT_ECG-00",
+   "clause_type": "QT_ECG",
+   "text": "QT 간격·심전도 모니터링 및 제외기준",
+   "clause_class": "molecule_specific",
+   "trigger_risks": [
+    "R-basic_amine-00",
+    "R-herg_pharmacophore-12"
+   ],
+   "p_base": 0.3197287577427781,
+   "p_hat": 0.4973474801061008,
+   "delta": 0.1776187223633227,
+   "delta_star": 0.048182077981669874,
+   "sigma": 0.014329698994764599,
+   "ad": 0.3139534890651703,
+   "trust": 0.4406368810592335,
+   "decision": "escalate",
+   "reason_code": "trust_in_review_band",
+   "provenance": {
+    "kind": "computed",
+    "detail": "템플릿 기저 p_base=0.320 (Phase 1, 종양) · 모델 p_hat=0.497",
+    "url": "",
+    "span_id": "",
+    "verified_at": ""
+   },
+   "sealed_falsifier": {
+    "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
+    "recorded_at": "pre-judgment",
+    "hash": "9a0b4bea62a428f52cb0093eac91d85ac99e09b8a5c1ebd60447ce468f75445f"
+   },
+   "mechanism": "양성자화 염기성 질소가 hERG 포어 방향족 잔기와 상호작용하는 고전적 약리단 요소; 염기성 아민 + 높은 친유성 조합이 hERG 저해와 연관되어 논의되어 온 휴리스틱",
+   "attribution_scope": {
+    "ablatable": [
+     "basic_amine",
+     "herg_pharmacophore"
+    ],
+    "property_only": [],
+    "n_decoy": 12,
+    "mean_decoy_delta": 0.12943664438165284,
+    "sd_decoy_delta": 2.7755575615628914e-17,
+    "structure_share": 0.2712668875250237
+   }
+  },
+  {
+   "clause_id": "C-CYP_DDI-01",
+   "clause_type": "CYP_DDI",
+   "text": "CYP 효소 매개 약물상호작용 병용 제한",
+   "clause_class": "molecule_specific",
+   "trigger_risks": [
+    "R-halogenated_aromatic-07",
+    "R-lipophilic-13"
+   ],
+   "p_base": 0.24040301809417097,
+   "p_hat": 0.3300970873786408,
+   "delta": 0.08969406928446982,
+   "delta_star": 0.05719119076279385,
+   "sigma": 0.00885533283371744,
+   "ad": 0.3139534890651703,
+   "trust": 0.6222549567264053,
+   "decision": "escalate",
+   "reason_code": "trust_in_review_band",
+   "provenance": {
+    "kind": "computed",
+    "detail": "템플릿 기저 p_base=0.240 (Phase 1, 종양) · 모델 p_hat=0.330",
+    "url": "",
+    "span_id": "",
+    "verified_at": ""
+   },
+   "sealed_falsifier": {
+    "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
+    "recorded_at": "pre-judgment",
+    "hash": "975d4a1675790a37682d5edd9def509378b283e0c6763ee710995d109303cdd2"
+   },
+   "mechanism": "방향족 할로겐화는 친유성을 높여 CYP 매개 대사 의존도를 증가시킴; 친유성 화합물은 CYP 기질·저해제가 될 가능성이 높아 병용 제한 조항을 유발",
+   "attribution_scope": {
+    "ablatable": [
+     "halogenated_aromatic"
+    ],
+    "property_only": [
+     "lipophilic"
+    ],
+    "n_decoy": 12,
+    "mean_decoy_delta": 0.03250287852167597,
+    "sd_decoy_delta": 0.007482114879603598,
+    "structure_share": 0.6376251096536689
+   }
+  },
+  {
+   "clause_id": "C-HEPATIC-02",
+   "clause_type": "HEPATIC",
+   "text": "간기능 수치 기반 제외기준",
+   "clause_class": "template_baseline",
+   "trigger_risks": [],
+   "p_base": 0.6549607405855334,
+   "p_hat": 0.48936170212765956,
+   "delta": -0.16559903845787388,
+   "delta_star": -0.16559903845787388,
+   "sigma": 0.009377119360460774,
+   "ad": 0.3139534890651703,
+   "trust": -1.7697581329114824,
+   "decision": "abstain",
+   "reason_code": "no_structural_trigger",
+   "provenance": {
+    "kind": "computed",
+    "detail": "템플릿 기저 p_base=0.655 (Phase 1, 종양) · 모델 p_hat=0.489",
+    "url": "",
+    "span_id": "",
+    "verified_at": ""
+   },
+   "sealed_falsifier": {
+    "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
+    "recorded_at": "pre-judgment",
+    "hash": "91d2554819b38ba673b7496855b2f5294c9d80db50a255b00b370658217328e7"
+   },
+   "mechanism": "",
+   "attribution_scope": null
+  },
+  {
+   "clause_id": "C-RENAL-03",
+   "clause_type": "RENAL",
+   "text": "신기능 기반 제외기준",
+   "clause_class": "template_baseline",
+   "trigger_risks": [],
+   "p_base": 0.43735919481206537,
+   "p_hat": 0.31317494600431967,
+   "delta": -0.1241842488077457,
+   "delta_star": -0.1241842488077457,
+   "sigma": 0.01166437244478618,
+   "ad": 0.3139534890651703,
+   "trust": -1.2312916754662766,
+   "decision": "abstain",
+   "reason_code": "no_structural_trigger",
+   "provenance": {
+    "kind": "computed",
+    "detail": "템플릿 기저 p_base=0.437 (Phase 1, 종양) · 모델 p_hat=0.313",
+    "url": "",
+    "span_id": "",
+    "verified_at": ""
+   },
+   "sealed_falsifier": {
+    "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
+    "recorded_at": "pre-judgment",
+    "hash": "e7788826d2171216619471817f93ffa1053ae5f056e4a23c467894837fae1d7e"
+   },
+   "mechanism": "",
+   "attribution_scope": null
+  },
+  {
+   "clause_id": "C-HEMATO-04",
+   "clause_type": "HEMATO",
+   "text": "혈액학적 수치 기반 제외기준",
+   "clause_class": "template_baseline",
+   "trigger_risks": [],
+   "p_base": 0.5492124799513267,
+   "p_hat": 0.3501144164759725,
+   "delta": -0.1990980634753542,
+   "delta_star": -0.1990980634753542,
+   "sigma": 0.00927024457666962,
+   "ad": 0.3139534890651703,
+   "trust": -2.135531581585381,
+   "decision": "abstain",
+   "reason_code": "no_structural_trigger",
+   "provenance": {
+    "kind": "computed",
+    "detail": "템플릿 기저 p_base=0.549 (Phase 1, 종양) · 모델 p_hat=0.350",
+    "url": "",
+    "span_id": "",
+    "verified_at": ""
+   },
+   "sealed_falsifier": {
+    "predicate": "delta_star<=0 OR evidence_span_absent OR kr_pool_reduction>0.4",
+    "recorded_at": "pre-judgment",
+    "hash": "616276a90c8c861edfe04f2b980fd6448df94780b979511793f6e683fccb11bc"
+   },
+   "mechanism": "",
+   "attribution_scope": null
+  }
+ ],
+ "trace": [
+  {
+   "seq": 0,
+   "agent": "MARKER",
+   "step": "구조 경보 산출",
+   "detail": "4건 검출: ['basic_amine', 'halogenated_aromatic', 'herg_pharmacophore', 'lipophilic'] · AD=0.31"
+  },
+  {
+   "seq": 1,
+   "agent": "SCRIBE",
+   "step": "조항 후보 기안",
+   "detail": "5종 · 분자특이 2종 · Δ 범위 [-0.199, +0.178]"
+  },
+  {
+   "seq": 2,
+   "agent": "ACTUARY",
+   "step": "개시용량 산출",
+   "detail": "NOAEL 25.0 mg/kg (rat) → HED 4.032 → SF10 → MRSD 0.4032 mg/kg = 24.19 mg/60kg"
+  },
+  {
+   "seq": 3,
+   "agent": "ACTUARY",
+   "step": "검정력 게이트",
+   "detail": "N=60, 0.100→0.250 · power=0.58 · 부족 → 필요 N≈101"
+  },
+  {
+   "seq": 4,
+   "agent": "ADVERSARY",
+   "step": "R2 구조 귀속 검정",
+   "detail": "QT_ECG: Δ=+0.1776 · decoy 12개 평균 Δ=+0.1294(sd 0.0000) → Δ*=+0.0482 · 구조 귀속분 27%"
+  },
+  {
+   "seq": 5,
+   "agent": "ADVERSARY",
+   "step": "R2 구조 귀속 검정",
+   "detail": "CYP_DDI: Δ=+0.0897 · decoy 12개 평균 Δ=+0.0325(sd 0.0075) → Δ*=+0.0572 · 구조 귀속분 64%"
+  },
+  {
+   "seq": 6,
+   "agent": "LEDGER",
+   "step": "선택적 발행",
+   "detail": "발행 0 · 사람검토 2 · 기권 3 (기권율 60%)"
+  },
+  {
+   "seq": 7,
+   "agent": "ACTUARY",
+   "step": "모집 게이트",
+   "detail": "발행 조항 기준 등록가능 인구 0.0% 감소 · 통과"
+  }
+ ],
+ "meta": {
+  "context": {
+   "phase": "Phase 1",
+   "indication": "advanced solid tumor",
+   "oncology": true
+  },
+  "molecule": {
+   "smiles": "CN1CCN(c2ccc(C(=O)Nc3ccc(Cl)cc3C(F)(F)F)cc2)CC1",
+   "mw": 397.82800000000003,
+   "clogp": 4.362900000000003,
+   "tpsa": 35.58,
+   "hbd": 1
+  },
+  "ad": 0.3139534890651703,
+  "risks": [
+   {
+    "risk_id": "R-basic_amine-00",
+    "flag": "basic_amine"
+   },
+   {
+    "risk_id": "R-halogenated_aromatic-07",
+    "flag": "halogenated_aromatic"
+   },
+   {
+    "risk_id": "R-herg_pharmacophore-12",
+    "flag": "herg_pharmacophore"
+   },
+   {
+    "risk_id": "R-lipophilic-13",
+    "flag": "lipophilic"
+   }
+  ],
+  "dose": {
+   "noael_mg_kg": 25.0,
+   "species": "rat",
+   "hed_factor": 6.2,
+   "hed_mg_kg": 4.032258064516129,
+   "safety_factor": 10.0,
+   "mrsd_mg_kg": 0.4032258064516129,
+   "mrsd_total_mg": 24.193548387096772,
+   "basis": "FDA 2005 Estimating the Maximum Safe Starting Dose (체표면적 환산)"
+  },
+  "power_gate": {
+   "detectable": false,
+   "power": 0.5801533989879304,
+   "required_n": 101
+  },
+  "feasibility": {
+   "pool_reduction": 0.0,
+   "exceeds": false,
+   "assumption": "제외기준 간 독립 가정. 실제로는 상관이 있어 감소폭이 과대추정될 수 있음"
+  },
+  "n_train": 27593,
+  "confirmed_triggers": {
+   "QT_ECG": [
+    "basic_amine",
+    "herg_pharmacophore"
+   ],
+   "CYP_DDI": [
+    "halogenated_aromatic",
+    "lipophilic"
+   ],
+   "HEPATIC": [
+    "hydrazine"
+   ]
+  },
+  "tool_versions": {
+   "rdkit": "2026.03.4",
+   "scikit-learn": "1.9.0",
+   "scipy": "1.17.1",
+   "python": "3.11.15"
+  },
+  "seed": 20260807
+ },
+ "dag_hash": "dbbe61e7d7d5d249190f23bfb7a8d2a5aae73353e212a8355a0dbc37b9e02dcc"
+}

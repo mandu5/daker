@@ -1,0 +1,40 @@
+==========================================================================
+먹줄(INKLINE) 실행 보고서   run_id=69540eaa9180
+==========================================================================
+분자   CC(=O)Oc1ccccc1C(=O)O
+       MW 180.2 · cLogP 1.31 · TPSA 63.6 · HBD 1  |  AD 1.00
+맥락   Phase 2 · hypertension (비종양)
+구조경보 1건: ['carboxylic_acid']
+개시용량 MRSD 96.77 mg/60kg (NOAEL 100.0 mg/kg rat → HED 16.129 → SF10)
+검정력 power=0.58 · 부족 → 필요 N≈101
+
+── 조항 판정 ────────────────────────────────────────────────────────────
+조항         분류              p_base   p_hat       Δ       Δ*      σ       T  판정         사유
+QT_ECG     template_baseline   0.186   0.152 -0.0333  -0.0333  0.006   -1.28  기권         no_structural_trigger
+CYP_DDI    template_baseline   0.084   0.062 -0.0224  -0.0224  0.003   -0.97  기권         no_structural_trigger
+HEPATIC    template_baseline   0.300   0.248 -0.0518  -0.0518  0.009   -1.80  기권         no_structural_trigger
+RENAL      template_baseline   0.252   0.293 +0.0410  +0.0410  0.012    1.29  기권         no_structural_trigger
+HEMATO     template_baseline   0.189   0.232 +0.0428  +0.0428  0.005    1.68  기권         no_structural_trigger
+
+요약   발행 0 · 사람검토 0 · 기권 5  (기권율 100%)
+모집   등록가능 인구 0.0% 감소
+
+감사 DAG 해시  6f40211a5f68d42978a81cdbadc820c9e7085ba1ae1d4b1d13935a0b746c97b8
+도구 버전       {'rdkit': '2026.03.4', 'scikit-learn': '1.9.0', 'scipy': '1.17.1', 'python': '3.11.15'}
+
+── 실행 추적 ────────────────────────────────────────────────────────────
+[ 0] MARKER     구조 경보 산출         1건 검출: ['carboxylic_acid'] · AD=1.00
+[ 1] SCRIBE     조항 후보 기안         5종 · 분자특이 0종 · Δ 범위 [-0.052, +0.043]
+[ 2] ACTUARY    개시용량 산출          NOAEL 100.0 mg/kg (rat) → HED 16.129 → SF10 → MRSD 1.6129 mg/kg = 96.77 mg/60kg
+[ 3] ACTUARY    검정력 게이트          N=60, 0.100→0.250 · power=0.58 · 부족 → 필요 N≈101
+[ 4] LEDGER     선택적 발행           발행 0 · 사람검토 0 · 기권 5 (기권율 100%)
+[ 5] ACTUARY    모집 게이트           발행 조항 기준 등록가능 인구 0.0% 감소 · 통과
+
+[1/3] 0.25s  dag=6f40211a5f68d429
+
+[2/3] 0.03s  dag=6f40211a5f68d429
+
+[3/3] 0.02s  dag=6f40211a5f68d429
+
+E4 재현성(DPR): 3회 실행 해시 일치 ✓
+저장: prototype/results/runs/demo_aspirin.json

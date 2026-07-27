@@ -31,11 +31,17 @@ from mechanism import PREREGISTERED  # noqa: E402
 SPLIT_SEED = "inkline-2026"
 TEST_FRAC = 0.30
 
-# 가치 주장 대상 조항 (관례적 포함 성격이 강한 피임 조항은 제외)
-TARGET_CLAUSES = ["QT_ECG", "CYP_DDI", "HEPATIC", "RENAL", "HEMATO"]
+# 가치 주장 대상 조항.
+# 관례적 포함 성격이 강한 피임(CONTRACEPT)과 기저율이 템플릿 수준인
+# 과민반응(HYPERSENS 41.8%)은 제외한다. 희소 조항(QT_DRUG 1.5%,
+# PHOTO 0.9%)은 검정력 부족으로 판정을 보류한다.
+TARGET_CLAUSES = ["QT_ECG", "CYP_DDI", "HEPATIC", "RENAL", "HEMATO",
+                  "FOOD_EFFECT", "GI_IRRITATION", "SEIZURE", "GASTRIC_PH",
+                  "THYROID"]
 
 # 안전성 조항 — 이것을 '불필요'로 오판하면 FOR_safety 에 잡힌다
-SAFETY_CLAUSES = {"QT_ECG", "CYP_DDI", "HEPATIC", "RENAL"}
+SAFETY_CLAUSES = {"QT_ECG", "CYP_DDI", "HEPATIC", "RENAL", "SEIZURE",
+                  "GI_IRRITATION"}
 
 PHASES = ["Phase 1", "Phase 2", "Phase 3", "Phase 4"]
 

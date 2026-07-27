@@ -66,6 +66,13 @@ CLAUSE_EVIDENCE = {
     "HEPATIC": ["FDA_DILI"],         # 코퍼스에 없음 → 격리 대상
     "RENAL": ["FDA_RENAL_IMP"],      # 코퍼스에 없음 → 격리 대상
     "HEMATO": [],                    # 근거 문서를 특정하지 못함
+    # 2차 확장분. 어느 것도 실재 확인을 마치지 못해 전부 격리 대상이다.
+    # 코퍼스 한계를 그대로 드러내는 것이 이 설계의 요점이다.
+    "FOOD_EFFECT": ["FDA_FOOD_EFFECT_BA"],
+    "GI_IRRITATION": ["FDA_GI_SAFETY"],
+    "SEIZURE": ["FDA_SEIZURE"],
+    "GASTRIC_PH": ["FDA_ACID_REDUCING"],
+    "THYROID": [],
 }
 
 # A1 재기안이 시도할 대체 근거 경로.

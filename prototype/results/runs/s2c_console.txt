@@ -1,0 +1,196 @@
+
+고유 임상시험 81,786건 → 분석 대상 39,379건
+제외 내역: {'no_smiles': 38883, 'unparsable': 4, 'short_criteria': 14, 'filtered': 3506}
+
+[구조 플래그 매칭률]
+  basic_amine               14949 /  39379 = 38.0% [0.375,0.384]  (과다포괄 주의)
+  thiophene                  1033 /  39379 =  2.6% [0.025,0.028]
+  nitroaromatic               342 /  39379 =  0.9% [0.008,0.010]
+  aniline                    6875 /  39379 = 17.5% [0.171,0.178]
+  carboxylic_acid            5451 /  39379 = 13.8% [0.135,0.142]
+  sulfonamide                1796 /  39379 =  4.6% [0.044,0.048]
+  michael_acceptor           4471 /  39379 = 11.4% [0.110,0.117]
+  halogenated_aromatic       9785 /  39379 = 24.8% [0.244,0.253]
+  fused_tricyclic_aromatic      1 /  39379 =  0.0% [0.000,0.000]  (표본 부족 → 제외)
+  hydrazine                   174 /  39379 =  0.4% [0.004,0.005]
+  epoxide                     372 /  39379 =  0.9% [0.009,0.010]
+  quinone                      93 /  39379 =  0.2% [0.002,0.003]  (표본 부족 → 제외)
+  herg_pharmacophore         5303 /  39379 = 13.5% [0.131,0.138]
+  lipophilic                13647 /  39379 = 34.7% [0.342,0.351]
+  pains                      1744 /  39379 =  4.4% [0.042,0.046]
+
+[조항 유형 기저율 — 템플릿 조항과 분자 특이 후보의 분리]
+  HYPERSENS     41.8% [0.413,0.423]  template                     특정 약물계열 과민반응 병력 제외기준
+  CONTRACEPT    38.3% [0.378,0.388]  molecule_specific_candidate  피임 요구 조항
+  HEPATIC       36.3% [0.358,0.368]  molecule_specific_candidate  간기능 수치 기반 제외기준
+  RENAL         26.8% [0.264,0.272]  molecule_specific_candidate  신기능 기반 제외기준
+  HEMATO        26.3% [0.259,0.268]  molecule_specific_candidate  혈액학적 수치 기반 제외기준
+  QT_ECG        19.7% [0.193,0.201]  molecule_specific_candidate  QT 간격·심전도 관련 제외기준
+  SEIZURE       12.5% [0.122,0.128]  molecule_specific_candidate  경련·발작 병력 제외기준
+  CYP_DDI       10.9% [0.106,0.112]  molecule_specific_candidate  CYP 효소·병용금기 약물상호작용 조항
+  THYROID        8.1% [0.078,0.084]  molecule_specific_candidate  갑상선 기능 관련 조항
+  GI_IRRITATION   6.5% [0.062,0.067]  molecule_specific_candidate  위장관 궤양·출혈 병력 제외기준
+  FOOD_EFFECT    3.2% [0.030,0.034]  molecule_specific_candidate  음식·자몽 등 섭취 제한 조항
+  GASTRIC_PH     2.4% [0.023,0.026]  molecule_specific_candidate  위산분비억제제(PPI·H2 차단제)·제산제 병용 제한 조항
+  QT_DRUG        1.5% [0.014,0.016]  sparse                       QT 연장 약물 병용 금지 조항
+  PHOTO          0.9% [0.008,0.010]  sparse                       광과민성 관련 조항
+
+→ 가치 주장 대상 조항: ['QT_ECG', 'HEPATIC', 'RENAL', 'CYP_DDI', 'CONTRACEPT', 'HEMATO', 'GASTRIC_PH', 'FOOD_EFFECT', 'GI_IRRITATION', 'SEIZURE', 'THYROID']
+→ 템플릿으로 분류되어 제외: ['HYPERSENS']
+→ 희소로 판정 보류: ['QT_DRUG', 'PHOTO']
+
+[전체 표본 · Bonferroni 유의 · lift>1 상위]
+flag                     clause        n_flag   P|flag  P|~flag   lift          p  BH  Bonf
+aniline                  QT_DRUG         6875    0.032    0.012   2.70   1.35e-28   Y     Y
+nitroaromatic            FOOD_EFFECT      342    0.079    0.032   2.50   1.86e-05   Y     Y
+herg_pharmacophore       QT_DRUG         5303    0.028    0.013   2.12   5.42e-14   Y     Y
+pains                    QT_DRUG         1744    0.029    0.015   2.00   1.27e-05   Y     Y
+sulfonamide              GI_IRRITATION    1796    0.124    0.062   2.00   7.18e-21   Y     Y
+pains                    FOOD_EFFECT     1744    0.060    0.031   1.94   1.39e-09   Y     Y
+michael_acceptor         PHOTO           4471    0.016    0.008   1.93   4.16e-06   Y     Y
+lipophilic               FOOD_EFFECT    13647    0.047    0.024   1.91   3.23e-31   Y     Y
+halogenated_aromatic     FOOD_EFFECT     9785    0.050    0.026   1.89   1.78e-27   Y     Y
+nitroaromatic            CYP_DDI          342    0.202    0.108   1.87   4.66e-07   Y     Y
+halogenated_aromatic     CYP_DDI         9785    0.165    0.090   1.83   4.52e-87   Y     Y
+lipophilic               QT_DRUG        13647    0.022    0.012   1.81   3.62e-13   Y     Y
+lipophilic               CYP_DDI        13647    0.153    0.086   1.78   2.20e-87   Y     Y
+basic_amine              QT_DRUG        14949    0.021    0.012   1.77   2.57e-12   Y     Y
+epoxide                  THYROID          372    0.140    0.080   1.74   1.15e-04   Y     Y
+aniline                  CYP_DDI         6875    0.167    0.097   1.73   4.60e-59   Y     Y
+aniline                  HEMATO          6875    0.402    0.234   1.72  1.15e-168   Y     Y
+sulfonamide              FOOD_EFFECT     1796    0.051    0.031   1.65   1.01e-05   Y     Y
+herg_pharmacophore       FOOD_EFFECT     5303    0.048    0.030   1.63   1.53e-11   Y     Y
+halogenated_aromatic     QT_ECG          9785    0.276    0.171   1.61  5.80e-107   Y     Y
+aniline                  HEPATIC         6875    0.514    0.331   1.55  2.75e-174   Y     Y
+carboxylic_acid          GI_IRRITATION    5451    0.093    0.060   1.54   4.24e-18   Y     Y
+herg_pharmacophore       CYP_DDI         5303    0.156    0.102   1.54   9.51e-30   Y     Y
+aniline                  RENAL           6875    0.373    0.246   1.52   9.09e-98   Y     Y
+pains                    QT_ECG          1744    0.287    0.193   1.49   2.75e-20   Y     Y
+
+[경고] 템플릿 조항과 유의하게 연관된 플래그 — 해당 플래그는 적응증 등의 대리변수일 가능성
+flag                     clause        n_flag   P|flag  P|~flag   lift          p  BH  Bonf
+epoxide                  HYPERSENS        372    0.538    0.417   1.29   3.93e-06   Y     Y
+
+[적응증 층화] 종양 12,228건 / 비종양 27,151건
+
+flag                     clause          전체lift    종양lift     비종양lift             판정
+basic_amine              QT_ECG            1.29      1.39        1.26             채택
+basic_amine              HEPATIC           0.76      0.96        0.73     층화 후 약화/소멸
+basic_amine              RENAL             0.79      0.93        0.78     층화 후 약화/소멸
+basic_amine              CONTRACEPT        0.86      0.99        0.86     층화 후 약화/소멸
+basic_amine              HEMATO            0.69      0.91        0.64     층화 후 약화/소멸
+basic_amine              GI_IRRITATION      0.57      0.71        0.52     층화 후 약화/소멸
+basic_amine              SEIZURE           1.48      0.94        1.73     층화 후 약화/소멸
+basic_amine              THYROID           1.14      1.32        1.05             채택
+thiophene                HEPATIC           0.57      0.89        0.77     층화 후 약화/소멸
+thiophene                CONTRACEPT        0.71      0.97        0.85     층화 후 약화/소멸
+thiophene                HEMATO            0.70      0.99        1.17     층화 후 약화/소멸
+nitroaromatic            CYP_DDI           1.87      3.19        0.94     층화 후 약화/소멸
+nitroaromatic            FOOD_EFFECT       2.50      7.65        0.85     층화 후 약화/소멸
+aniline                  QT_ECG            1.39      1.51        1.30             채택
+aniline                  HEPATIC           1.55      1.04        1.55     층화 후 약화/소멸
+aniline                  RENAL             1.52      1.16        1.47             채택
+aniline                  CYP_DDI           1.73      1.58        1.40             채택
+aniline                  CONTRACEPT        1.36      1.07        1.26             채택
+aniline                  HEMATO            1.72      1.00        1.90     층화 후 약화/소멸
+aniline                  SEIZURE           0.77      0.79        0.80     층화 후 약화/소멸
+aniline                  THYROID           0.67      0.78        0.64     층화 후 약화/소멸
+carboxylic_acid          QT_ECG            0.78      0.55        0.85     층화 후 약화/소멸
+carboxylic_acid          HEPATIC           0.84      0.94        1.07     층화 후 약화/소멸
+carboxylic_acid          CYP_DDI           0.50      0.37        0.61     층화 후 약화/소멸
+carboxylic_acid          CONTRACEPT        0.86      0.96        0.96     층화 후 약화/소멸
+carboxylic_acid          HEMATO            0.84      0.95        1.24     층화 후 약화/소멸
+carboxylic_acid          GI_IRRITATION      1.54      1.15        1.85             채택
+carboxylic_acid          SEIZURE           0.73      0.81        0.69     층화 후 약화/소멸
+carboxylic_acid          THYROID           0.81      0.62        0.81     층화 후 약화/소멸
+sulfonamide              QT_ECG            1.37      2.41        1.04     층화 후 약화/소멸
+sulfonamide              CYP_DDI           1.46      1.97        1.29             채택
+sulfonamide              FOOD_EFFECT       1.65      3.31        1.21             채택
+sulfonamide              GI_IRRITATION      2.00      4.13        1.20             채택
+michael_acceptor         HEPATIC           0.84      0.97        0.85     층화 후 약화/소멸
+michael_acceptor         RENAL             0.90      1.02        0.89     층화 후 약화/소멸
+michael_acceptor         CYP_DDI           1.18      1.63        1.00     층화 후 약화/소멸
+michael_acceptor         SEIZURE           0.54      0.64        0.50     층화 후 약화/소멸
+halogenated_aromatic     QT_ECG            1.61      1.75        1.55             채택
+halogenated_aromatic     RENAL             1.15      1.10        1.20             채택
+halogenated_aromatic     CYP_DDI           1.83      2.13        1.62             채택
+halogenated_aromatic     FOOD_EFFECT       1.89      2.48        1.71             채택
+halogenated_aromatic     SEIZURE           1.35      1.74        1.21             채택
+halogenated_aromatic     THYROID           1.38      1.80        1.25             채택
+hydrazine                HEPATIC           1.39      1.26        1.56             채택
+epoxide                  RENAL             1.40      1.15        1.57             채택
+epoxide                  SEIZURE           0.41      0.33        0.45     층화 후 약화/소멸
+epoxide                  THYROID           1.74      2.35        1.50             채택
+herg_pharmacophore       QT_ECG            1.36      1.30        1.38             채택
+herg_pharmacophore       HEPATIC           0.92      0.97        0.85     층화 후 약화/소멸
+herg_pharmacophore       RENAL             0.85      1.01        0.71     층화 후 약화/소멸
+herg_pharmacophore       CYP_DDI           1.54      1.77        1.36             채택
+herg_pharmacophore       HEMATO            0.85      0.96        0.66     층화 후 약화/소멸
+herg_pharmacophore       FOOD_EFFECT       1.63      2.34        1.40             채택
+herg_pharmacophore       GI_IRRITATION      0.63      0.80        0.52     층화 후 약화/소멸
+herg_pharmacophore       SEIZURE           1.31      0.96        1.46     층화 후 약화/소멸
+lipophilic               QT_ECG            1.22      1.32        1.17             채택
+lipophilic               HEPATIC           1.08      1.00        1.08     층화 후 약화/소멸
+lipophilic               RENAL             0.93      0.97        0.84     층화 후 약화/소멸
+lipophilic               CYP_DDI           1.78      2.01        1.54             채택
+lipophilic               CONTRACEPT        1.05      1.01        1.03     층화 후 약화/소멸
+lipophilic               FOOD_EFFECT       1.91      2.49        1.77             채택
+lipophilic               GI_IRRITATION      0.82      1.14        0.62     층화 후 약화/소멸
+lipophilic               THYROID           1.24      1.04        1.33     층화 후 약화/소멸
+pains                    QT_ECG            1.49      1.16        1.73             채택
+pains                    HEPATIC           1.34      1.09        1.34             채택
+pains                    CYP_DDI           1.38      0.88        1.82     층화 후 약화/소멸
+pains                    CONTRACEPT        1.25      1.05        1.28             채택
+pains                    HEMATO            1.34      1.04        1.37     층화 후 약화/소멸
+pains                    FOOD_EFFECT       1.94      1.39        2.36             채택
+pains                    SEIZURE           0.74      0.73        0.77     층화 후 약화/소멸
+
+[룰 채택률 — 정직성 지표]
+  검정한 (플래그×분자특이조항) 쌍: 143
+  Bonferroni 유의 + 층화 통과: 29
+  층화 후 무너진 것: 41
+  채택률: 29/143 = 20.3%
+
+[사전 선언 기전 게이트]
+  사전 선언한 (플래그→조항) 쌍: 26
+  ├ confirmatory (선언 + 통계 + 층화 통과): 8  → 가치 주장에 사용
+  │   lipophilic             → FOOD_EFFECT lift=1.91 (종양 2.49 / 비종양 1.77)
+  │   halogenated_aromatic   → FOOD_EFFECT lift=1.89 (종양 2.48 / 비종양 1.71)
+  │   halogenated_aromatic   → CYP_DDI     lift=1.83 (종양 2.13 / 비종양 1.62)
+  │   lipophilic             → CYP_DDI     lift=1.78 (종양 2.01 / 비종양 1.54)
+  │   carboxylic_acid        → GI_IRRITATION lift=1.54 (종양 1.15 / 비종양 1.85)
+  │   hydrazine              → HEPATIC     lift=1.39 (종양 1.26 / 비종양 1.56)
+  │   herg_pharmacophore     → QT_ECG      lift=1.36 (종양 1.30 / 비종양 1.38)
+  │   basic_amine            → QT_ECG      lift=1.29 (종양 1.39 / 비종양 1.26)
+  ├ refuted (선언했으나 통과 실패): 15  → 실패로 보고
+  │   herg_pharmacophore     → QT_DRUG     lift=2.12 p=5.4e-14
+  │   basic_amine            → QT_DRUG     lift=1.77 p=2.6e-12
+  │   aniline                → HEPATIC     lift=1.55 p=2.8e-174
+  │   basic_amine            → SEIZURE     lift=1.48 p=5.5e-49
+  │   sulfonamide            → RENAL       lift=1.10 p=1.0e-02
+  │   sulfonamide            → HYPERSENS   lift=1.07 p=1.3e-02
+  │   carboxylic_acid        → RENAL       lift=1.02 p=4.1e-01
+  │   aniline                → HYPERSENS   lift=1.02 p=2.6e-01
+  │   nitroaromatic          → HEPATIC     lift=1.01 p=8.7e-01
+  │   epoxide                → HEPATIC     lift=0.86 p=5.1e-02
+  │   michael_acceptor       → HEPATIC     lift=0.84 p=5.3e-15
+  │   basic_amine            → GASTRIC_PH  lift=0.79 p=3.6e-04
+  │   herg_pharmacophore     → GASTRIC_PH  lift=0.74 p=4.1e-03
+  │   sulfonamide            → PHOTO       lift=0.74 p=3.7e-01
+  ├ exploratory (선언 안 했으나 유의): 16  → 보고만, 기전 주장 안 함
+  │   sulfonamide            → GI_IRRITATION lift=2.00
+  │   epoxide                → THYROID     lift=1.74
+  │   aniline                → CYP_DDI     lift=1.73
+  │   sulfonamide            → FOOD_EFFECT lift=1.65
+  │   herg_pharmacophore     → FOOD_EFFECT lift=1.63
+  │   halogenated_aromatic   → QT_ECG      lift=1.61
+  │   herg_pharmacophore     → CYP_DDI     lift=1.54
+  │   aniline                → RENAL       lift=1.52
+  │   sulfonamide            → CYP_DDI     lift=1.46
+  │   epoxide                → RENAL       lift=1.40
+  ├ 기전 주장 금지 플래그(PAINS) 관련: 14
+  └ 관례적 조항으로 주장 제외(피임): 12
+
+  사전 선언 쌍의 확증률: 8/23 = 34.8%
+
+결과 저장: /home/user/daker/prototype/trialbench/../results/s2c_associations.json

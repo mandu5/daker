@@ -135,7 +135,35 @@ def main():
                            for c in TARGET_CLAUSES]))
         for mk in ("B-RULE", "INKLINE", "INKLINE+")}
 
-    print("[헤드라인] 템플릿 베이스라인 대비 증분 (5개 조항 평균)")
+    # ── 확증 기전 보유 여부로 분리 ─────────────────────────────
+    # 기전을 사전 선언하지 않았거나 확증되지 않은 조항에서 나오는 증분은
+    # 연속 물성만으로 얻은 것이다. 그것을 헤드라인에 섞으면 "기전을 검증했다"는
+    # 우리 주장이 무너진다. 두 군을 분리해 보고하고 **확증군만 주장한다.**
+    conf_clauses = [c for c in TARGET_CLAUSES
+                    if report["clauses"][c]["confirmed_flags"]]
+    expl_clauses = [c for c in TARGET_CLAUSES
+                    if not report["clauses"][c]["confirmed_flags"]]
+    report["mechanism_split"] = {"confirmed": conf_clauses,
+                                 "exploratory": expl_clauses}
+    for grp, cs in (("confirmed", conf_clauses), ("exploratory", expl_clauses)):
+        report["mechanism_split"][grp + "_delta_p"] = {
+            str(cov): float(np.mean(
+                [report["clauses"][c]["delta_p_at_coverage"]["INKLINE+"][str(cov)]
+                 for c in cs])) if cs else None
+            for cov in COVERAGES}
+        report["mechanism_split"][grp + "_delta_auprc"] = float(np.mean(
+            [report["clauses"][c]["delta_auprc"]["INKLINE+"] for c in cs])) if cs else None
+
+    print("\n[기전 확증 여부로 분리한 증분 — 확증군만 주장한다]")
+    for grp, ko in (("confirmed", "확증 기전 보유"), ("exploratory", "기전 미확증")):
+        cs = report["mechanism_split"][grp]
+        d = report["mechanism_split"][grp + "_delta_p"]
+        a = report["mechanism_split"][grp + "_delta_auprc"]
+        print(f"  {ko} {len(cs)}종 {cs}")
+        print(f"    ΔP@5% {d['0.05']:+.3f} · ΔP@10% {d['0.1']:+.3f} · "
+              f"ΔAUPRC {a:+.3f}")
+
+    print(f"\n[전체 {len(TARGET_CLAUSES)}개 조항 평균 — 참고용]")
     for cov in COVERAGES:
         for mk in ("INKLINE", "INKLINE+"):
             h = head[str(cov)][mk]

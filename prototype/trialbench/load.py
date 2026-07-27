@@ -55,7 +55,20 @@ CLAUSE_PATTERNS = {
     ),
     "RENAL": (
         "신기능 기반 제외기준",
-        r"creatinine clearance|\bCrCl\b|\beGFR\b|glomerular filtration"
+        # 2차 라벨러 감사(2026-07-27)에서 발견한 **어휘 충돌**:
+        # 전체 패턴이 re.I 로 컴파일되므로 `\beGFR\b`(추정 사구체여과율)가
+        # **EGFR**(표피성장인자수용체)까지 잡았다. 그 결과 세툭시맙·엘로티닙 등
+        # EGFR 표적 폐암 시험 877건이 "신기능 제외기준"으로 라벨링됐다
+        # (v1 양성의 4.6%, 그중 57%가 EGFR 표적 약물을 명시).
+        # 이것은 우리가 제안서에서 경고한 **적응증 대리변수 교락**이
+        # 우리 계측기 안에 들어와 있던 사례다. RENAL 은 안전성 조항이고
+        # 카복실산·설폰아마이드 → 신기능 가설이 걸려 있어 영향이 크다.
+        #
+        # 수정: eGFR 만 국소적으로 대소문자를 구분한다(`(?-i:...)`).
+        # `\bGFR\b` 는 단어 경계 때문에 EGFR 내부와 매칭되지 않아 안전하며,
+        # 대문자로만 쓰인 진짜 사구체여과율 언급을 회수한다.
+        r"creatinine clearance|\bCrCl\b|(?-i:\beGFR\b)|\bGFR\b"
+        r"|glomerular filtration"
         r"|renal (impairment|dysfunction|insufficiency)|dialysis",
     ),
     "CYP_DDI": (
@@ -81,7 +94,14 @@ CLAUSE_PATTERNS = {
     ),
     "HEMATO": (
         "혈액학적 수치 기반 제외기준",
-        r"absolute neutrophil|\bANC\b|platelet count|h(a)?emoglobin"
+        # 2차 감사에서 발견한 두 번째 어휘 충돌: `h(a)?emoglobin` 이
+        # **당화혈색소(HbA1c)** 까지 잡았다. 당뇨 시험 588건(v1 양성의 2.9%)이
+        # 혈액학적 제외기준으로 라벨링됐다. A1c 는 혈당 조절 지표이지
+        # 골수억제·빈혈 지표가 아니다.
+        # 수정: A1c 수식이 붙은 h(a)emoglobin 만 배제한다.
+        # `h(a)emoglobinopathy` 는 뒤따르는 A1c 가 없으므로 그대로 남는다.
+        r"absolute neutrophil|\bANC\b|platelet count"
+        r"|(?<!glycated )(?<!glycosylated )h(a)?emoglobin(?!\s*A-?1-?c)"
         r"|neutropeni|thrombocytopeni",
     ),
     # ── 2차 확장 (2026-07-26 추가) ────────────────────────────

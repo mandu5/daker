@@ -1,0 +1,47 @@
+{
+ "test": "exact permutation over clause labels",
+ "null_hypothesis": "조항의 확증/미확증 소속은 그 조항의 ΔP@5% 와 무관하다",
+ "statistic": "mean(ΔP|확증) − mean(ΔP|미확증)",
+ "coverage": 0.05,
+ "model": "INKLINE+",
+ "n_clauses": 10,
+ "n_confirmed": 5,
+ "n_permutations": 252,
+ "exhaustive": true,
+ "confirmed_mean": 0.049575551782682505,
+ "exploratory_mean": 0.03599320882852294,
+ "observed_gap": 0.013582342954159561,
+ "perm_mean": 0.0,
+ "perm_sd": 0.03279197548338529,
+ "percentile": 64.28571428571429,
+ "p_one_sided": 0.35714285714285715,
+ "p_two_sided": 0.7142857142857143,
+ "significant_at_05": false,
+ "per_clause_delta_p": {
+  "QT_ECG": 0.09507640067911713,
+  "CYP_DDI": 0.09337860780984716,
+  "HEPATIC": -0.01018675721561968,
+  "RENAL": -0.05263157894736842,
+  "HEMATO": 0.03056027164685915,
+  "FOOD_EFFECT": 0.02376910016977929,
+  "GI_IRRITATION": 0.04584040747028861,
+  "SEIZURE": 0.08149405772495757,
+  "GASTRIC_PH": 0.013582342954159596,
+  "THYROID": 0.1069609507640068
+ },
+ "confirmed": [
+  "CYP_DDI",
+  "FOOD_EFFECT",
+  "GI_IRRITATION",
+  "HEPATIC",
+  "QT_ECG"
+ ],
+ "exploratory": [
+  "GASTRIC_PH",
+  "HEMATO",
+  "RENAL",
+  "SEIZURE",
+  "THYROID"
+ ],
+ "verdict": "확증군의 ΔP@5% 가 미확증군보다 크다는 방향은 관측되나, 조항 10종(5 대 5)에서는 이 격차가 무작위 라벨링과 구별되지 않는다. **우리는 이 격차를 유의하다고 주장하지 않는다.** 조항 수를 늘리는 것이 이 주장을 검정 가능하게 만드는 유일한 길이며 본선 과제로 넘긴다."
+}

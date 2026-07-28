@@ -25,6 +25,8 @@ E3 = json.load(open(os.path.join(RES, "e3_null.json"), encoding="utf-8"))
 TAU = json.load(open(os.path.join(RES, "tau_calibration.json"), encoding="utf-8"))
 RUN = json.load(open(os.path.join(RES, "runs", "demo_kinase_like.json"),
                     encoding="utf-8"))
+E5 = json.load(open(os.path.join(RES, "e5_mechanism_power.json"),
+                    encoding="utf-8"))
 
 
 def gate(name):
@@ -79,6 +81,15 @@ CHECKS = [
     ("CYP·DDI 먹줄 P@5%", 0.309,
      E1["clauses"]["CYP_DDI"]["precision_at_coverage"]["INKLINE+"]["0.05"]["precision"],
      0.0005),
+    # E5 — 기전 게이트 격차의 검정력. 본문이 "유의하지 않다"고 명시하므로
+    # 이 p 값이 0.05 아래로 내려가면 본문 서술을 바꿔야 한다. 양방향 감시.
+    ("E5 순열검정 단측 p", 0.357, E5["p_one_sided"], 0.002),
+    ("E5 순열 전수 개수", 252, E5["n_permutations"], 0),
+    ("E5 관측 격차", 0.0136, E5["observed_gap"], 0.0005),
+    ("E5 갑상선 ΔP@5%(미확증군 최대)", 0.107,
+     E5["per_clause_delta_p"]["THYROID"], 0.0005),
+    ("E5 간기능 ΔP@5%(확증군 음수)", -0.010,
+     E5["per_clause_delta_p"]["HEPATIC"], 0.0005),
 ]
 
 

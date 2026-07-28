@@ -24,6 +24,7 @@ AGENT_EN = "INKLINE"
 
 E1 = os.path.join(REPO, "prototype", "results", "e1_safe_inc.json")
 E3 = os.path.join(REPO, "prototype", "results", "e3_null.json")
+E5 = os.path.join(REPO, "prototype", "results", "e5_mechanism_power.json")
 
 
 def _r():
@@ -36,6 +37,10 @@ def _e1():
 
 def _e3():
     return json.load(open(E3, encoding="utf-8"))
+
+
+def _e5():
+    return json.load(open(E5, encoding="utf-8"))
 
 
 def fig(name, width_mm=150.0, caption=None):
@@ -55,6 +60,7 @@ def blocks():
     R = _r()
     E = _e1()
     N = _e3()
+    P = _e5()
     n_trials = R["n_analyzed"]
     conf = sorted(R["mechanism_gate"]["confirmatory"], key=lambda r: -r["lift"])
     cls = R["clause_classification"]
@@ -329,8 +335,17 @@ def blocks():
                  "588건이 각각 신기능·혈액 조항이 됐다. 넷을 고치자 "
                  f"__확증군 {E['mechanism_split']['confirmed_delta_p']['0.05']:+.3f} 대 "
                  f"미확증군 {E['mechanism_split']['exploratory_delta_p']['0.05']:+.3f}로 "
-                 "역전__. ③④는 구조 플래그에서 경계하던 **적응증 교락이 정답 라벨 쪽에** "
-                 "있던 것이다."},        {"type": "callout", "title": "가장 중요한 음성 결과.",
+                 "순서가 바뀌었다__. ③④는 구조 플래그에서 경계하던 **적응증 교락이 정답 "
+                 "라벨 쪽에** 있던 것이다."},
+        {"type": "fine", "text":
+            f"**그러나 이 순서 역전을 유의하다고 주장하지 않는다.** 조항 라벨을 뒤섞는 "
+            f"정확 순열검정(C(10,5)={P['n_permutations']}가지 전수)에서 관측 격차 "
+            f"{P['observed_gap']:+.4f}는 백분위 {P['percentile']:.0f}%, "
+            f"__단측 p={P['p_one_sided']:.2f}__ — 무작위 라벨링과 구별되지 않는다. "
+            "실제로 미확증군의 갑상선(+0.107)이 10종 중 가장 크고 확증군의 간기능은 "
+            "음수(−0.010)다. **조항 5 대 5로는 이 주장을 검정할 검정력이 없다.** "
+            "조항 수 확대가 유일한 길이며 본선 과제다. 우리가 이 검정을 돌리지 않았다면 "
+            "심사위원이 계산기로 무너뜨렸을 주장이다(`mechanism_power.py`)."},        {"type": "callout", "title": "가장 중요한 음성 결과.",
          "text": f"확증된 경보를 그대로 조항으로 발행하는 규칙 엔진(B-RULE)은 템플릿보다 "
                  f"**나빴다**(ΔAUPRC {E['mean_delta_auprc']['B-RULE']:+.3f}). "
                  "경보를 조항으로 직역하면 해롭다. __선택적 발행과 기권은 취향이 아니라 "

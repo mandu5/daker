@@ -73,6 +73,14 @@ def evaluate(recs, fit, verbose=True):
                 "delta_star": (None if c.delta_star != c.delta_star
                                else float(c.delta_star)),
                 "has_trigger": bool(c.trigger_risks),
+                # ── Δ* 절제(ablation)용 원시값 ──────────────────
+                # Δ* 대신 Δ 를 썼다면 어떤 판정이 나왔을지를 사후에 계산하려면
+                # 동일한 데이터에서 두 규칙을 돌려야 한다. 그래서 원시값을 남긴다.
+                "delta": float(c.delta), "sigma": float(c.sigma),
+                "ad": float(c.ad),
+                "four_tuple": bool(c.four_tuple_complete()),
+                "tau": (None if c.tau is None else float(c.tau)),
+                "sealed": bool(c.issuance_sealed),
             })
     return rows
 
@@ -183,7 +191,59 @@ def report(rows):
                         / max(len(no_trig), 1),
         "note": "확증된 구조 경보가 없는 (시험, 조항) 쌍에서는 발행이 0이어야 한다",
     }
+
+    # ── Δ* 절제 실험 ──────────────────────────────────────────
+    out["delta_star_ablation"] = delta_star_ablation(rows)
     return out
+
+
+def delta_star_ablation(rows, eps=0.02):
+    """Δ* 구조 귀속 검정을 빼면 무슨 일이 일어나는가.
+
+    Δ* 는 이 제안서가 새롭다고 주장하는 핵심 장치다. 그렇다면 **그것을 빼고
+    같은 데이터에서 돌려 보아야** 그 주장이 값을 갖는다.
+
+        현행    T = Δ*/(σ+ε) × AD,  Δ*≤0 이면 기권
+        절제    T = Δ /(σ+ε) × AD,  Δ ≤0 이면 기권   (귀속 검정 없음)
+
+    다른 조건(τ, 봉인, 4-튜플, 트리거 유무)은 완전히 동일하게 둔다.
+    바뀌는 것은 오직 '구조 귀속을 검정하는가'뿐이다.
+    """
+    def issued(r, use_star):
+        if not r["has_trigger"] or not r["four_tuple"] or r["sealed"]:
+            return False
+        d = r["delta_star"] if use_star else r["delta"]
+        if d is None or d != d or d <= 0:
+            return False
+        if r["tau"] is None:
+            return False
+        t = d / (r["sigma"] + eps) * max(r["ad"], 1e-3)
+        return t >= r["tau"]
+
+    def stats(use_star):
+        iss = [r for r in rows if issued(r, use_star)]
+        n = len(iss)
+        tp = sum(r["truth"] for r in iss)
+        neg = [r for r in rows if r["truth"] == 0]
+        fa = sum(1 for r in neg if issued(r, use_star))
+        p, lo, hi = wilson(tp, n) if n else (0.0, 0.0, 0.0)
+        return {"n_issued": n, "n_correct": tp,
+                "precision": p, "precision_ci": [lo, hi],
+                "false_alarm_rate": fa / max(len(neg), 1)}
+
+    with_star = stats(True)
+    without = stats(False)
+    return {
+        "with_delta_star": with_star,
+        "without_delta_star": without,
+        "note": "τ·봉인·4-튜플·트리거 조건은 동일. Δ* 를 Δ 로 바꾼 것만 다르다",
+        "verdict": (
+            f"Δ* 를 빼면 발행이 {with_star['n_issued']}건에서 "
+            f"{without['n_issued']}건으로 늘고 정밀도가 "
+            f"{with_star['precision']:.3f} → {without['precision']:.3f}, "
+            f"오경보율이 {with_star['false_alarm_rate']:.4f} → "
+            f"{without['false_alarm_rate']:.4f} 로 바뀐다"),
+    }
 
 
 def main():

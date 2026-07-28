@@ -90,6 +90,11 @@ CHECKS = [
      E5["per_clause_delta_p"]["THYROID"], 0.0005),
     ("E5 간기능 ΔP@5%(확증군 음수)", -0.010,
      E5["per_clause_delta_p"]["HEPATIC"], 0.0005),
+    ("E5 B-RULE 음수 조항 수", 10, E5["brule_sign_test"]["n_negative"], 0),
+    ("E5 B-RULE 부호검정 p", 0.002,
+     E5["brule_sign_test"]["sign_test_p_two_sided"], 0.0005),
+    ("E5 절감 하한(%)", 8.2, E5["saving_range"]["lo"] * 100, 0.15),
+    ("E5 절감 상한(%)", 47.0, E5["saving_range"]["hi"] * 100, 0.15),
 ]
 
 

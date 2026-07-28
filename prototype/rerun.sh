@@ -14,6 +14,8 @@ echo "== E3 기권·오판 =="
 python3 prototype/inkline/evaluate_e3.py > "$R/e3_console.txt"    2>&1
 echo "== E5 검정력·부호검정·절감범위 =="
 python3 prototype/inkline/mechanism_power.py > "$R/e5_console.txt" 2>&1
+echo "== E6 분할 시드 민감도 =="
+python3 prototype/inkline/seed_sensitivity.py --seeds 4 > "$R/e6_console.txt" 2>&1
 echo "== 안전 불변식 =="
 python3 prototype/inkline/test_invariants.py | tail -3
 echo "RERUN-COMPLETE"

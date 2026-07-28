@@ -25,6 +25,7 @@ AGENT_EN = "INKLINE"
 E1 = os.path.join(REPO, "prototype", "results", "e1_safe_inc.json")
 E3 = os.path.join(REPO, "prototype", "results", "e3_null.json")
 E5 = os.path.join(REPO, "prototype", "results", "e5_mechanism_power.json")
+E6 = os.path.join(REPO, "prototype", "results", "e6_seed_sensitivity.json")
 
 
 def _r():
@@ -41,6 +42,10 @@ def _e3():
 
 def _e5():
     return json.load(open(E5, encoding="utf-8"))
+
+
+def _e6():
+    return json.load(open(E6, encoding="utf-8"))
 
 
 def fig(name, width_mm=150.0, caption=None):
@@ -61,9 +66,11 @@ def blocks():
     E = _e1()
     N = _e3()
     P = _e5()
+    S = _e6()
     _ece = [E["clauses"][c]["ece_inkline_plus"] for c in E["clauses"]]
     ece_max = max(_ece)
     AB = N["delta_star_ablation"]
+    _gaps = ", ".join(f"{S['group_means'][s]['gap']:+.3f}" for s in S["seeds"])
     n_trials = R["n_analyzed"]
     conf = sorted(R["mechanism_gate"]["confirmatory"], key=lambda r: -r["lift"])
     cls = R["clause_classification"]
@@ -271,7 +278,7 @@ def blocks():
         {"type": "p", "tight": True, "text":
             "핵심 파이프라인은 **외부 API·GPU·LLM 호출 없이** 동작한다. 아래는 실제 실행 "
             "로그를 그대로 옮긴 것이다."},
-        fig("fig6_run.png", 143.0,
+        fig("fig6_run.png", 138.0,
             "실제 실행 결과. 5개 에이전트가 조항을 기안하고 Δ*로 스스로 기각하며 기권한다. "
             "3회 반복 실행 시 감사 DAG 해시가 일치한다."),
         {"type": "table",
@@ -331,19 +338,16 @@ def blocks():
                     f"{E['mechanism_split']['confirmed_delta_p']['0.05']:+.3f} · "
                     f"ΔAUPRC {E['mechanism_split']['confirmed_delta_auprc']:+.3f}."},
         {"type": "callout", "title": "정답 라벨을 감사하니 신호가 선명해졌다 — 결함 4건.",
-         "text": f"초기에는 __미확증군(+0.044)이 확증군(+0.035)보다 컸다__. 원인을 찾으러 우리 "
-                 "라벨러를 감사해 **결함 4건**을 찾았다 — ①QT 양성의 **61.2%**가 검사 절차 "
-                 "나열, ②음식효과의 **97.2%**가 CYP와 중복 계수(grapefruit), ③대소문자 무시로 "
-                 "**eGFR이 EGFR을 포획**해 폐암 877건, ④**hemoglobin이 HbA1c를 포획**해 당뇨 "
-                 "588건이 신기능·혈액 조항이 됐다(**적응증 교락이 정답 라벨 쪽에** 있었다). "
-                 "넷을 고치자 "
-                 f"__확증군 {E['mechanism_split']['confirmed_delta_p']['0.05']:+.3f} 대 "
-                 f"미확증군 {E['mechanism_split']['exploratory_delta_p']['0.05']:+.3f}로 "
-                 "순서가 바뀌었다__. **단, 이를 유의하다고 주장하지 않는다** — "
-                 f"정확 순열검정(C(10,5)={P['n_permutations']} 전수)에서 격차 "
-                 f"{P['observed_gap']:+.3f}는 __단측 p={P['p_one_sided']:.2f}__ 로 무작위 "
-                 "라벨링과 구별되지 않는다. "
-                 "__5 대 5로는 검정력이 없다__ — 조항 수 확대가 본선 과제다."},        {"type": "callout", "title": "가장 중요한 음성 결과.",
+         "text": "초기 이상 신호를 쫓아 우리 라벨러를 감사해 **결함 4건**을 찾았다 — "
+                 "①QT 양성의 **61.2%**가 검사 절차 나열, ②음식효과의 **97.2%**가 CYP와 "
+                 "중복(grapefruit), ③대소문자 무시로 **eGFR이 EGFR을 포획**(폐암 877건), "
+                 "④**hemoglobin이 HbA1c 포획**(당뇨 588건) — **적응증 교락이 정답 라벨에** "
+                 "있었다. **다만 군 평균 비교는 성립하지 않는다** — 분할 시드 4개로 "
+                 f"재적합하니 확증군−미확증군 격차의 __부호가 시드마다 바뀌고__"
+                 f"(평균 {S['gap_mean']:+.3f}) 순열검정도 p={P['p_one_sided']:.2f}다. "
+                 "__주장하지 않는다.__ 조항별로는 안정적이어서 4시드 전부 양수인 것이 "
+                 "갑상선·QT·경련·CYP 넷인데 **둘이 미확증군**이다 — 게이트는 어느 조항이 "
+                 "잘될지 예측하지 못한다."},        {"type": "callout", "title": "가장 중요한 음성 결과.",
          "text": f"확증된 경보를 그대로 조항으로 발행하는 규칙 엔진(B-RULE)은 템플릿보다 "
                  f"**나빴다**(ΔAUPRC {E['mean_delta_auprc']['B-RULE']:+.3f}). "
                  f"평균에 기댄 결과가 아니다 — __조항 "
@@ -352,7 +356,7 @@ def blocks():
                  f"**p={P['brule_sign_test']['sign_test_p_two_sided']:.3f}**. "
                  "__선택적 발행과 기권은 취향이 아니라 데이터가 강제한 설계다.__"},
         {"type": "h2", "text": "E3 NULL — 기권·오판·자기수정 실측"},
-        fig("fig7_selfcorrect.png", 126.0,
+        fig("fig7_selfcorrect.png", 124.0,
             "되돌아가는 화살표가 실제로 돈 로그와 E3 지표. 라벨러 수정 후 CYP·DDI와 "
             "QT 모두 신뢰구간이 1을 넘지 않는다."),
         {"type": "h2", "text": "연관이 곧 발행 자격은 아니다 — 조항별 τ 보정"},
@@ -387,9 +391,8 @@ def blocks():
             f"{AB['with_delta_star']['false_alarm_rate']:.4f}→"
             f"{AB['without_delta_star']['false_alarm_rate']:.4f}인데 __정밀도는 "
             f"{AB['with_delta_star']['precision']:.3f} 대 "
-            f"{AB['without_delta_star']['precision']:.3f}로 같다__(기각된 24건의 적중률이 "
-            "남긴 것과 동일). **Δ*는 맞고 틀림을 가르는 장치가 아니다** — 값은 정확도가 "
-            "아니라 __\"왜 이 조항인가\"에 구조로 답할 수 있는가__에 있다."},
+            f"{AB['without_delta_star']['precision']:.3f}로 같다__. **Δ*는 맞고 틀림을 "
+            "가르는 장치가 아니다** — 값은 정확도가 아니라 __귀속 설명력__에 있다."},
         {"type": "h2", "text": "사전 선언 기전 게이트"},
         {"type": "p", "tight": True, "text":
             f"사전 선언 {len(R['preregistered_pairs'])}쌍 중 **확증 {len(conf)} · 기각 "

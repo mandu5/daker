@@ -87,9 +87,16 @@ def calibrate(rows, target=TARGET_PRECISION):
         sub = sorted([r for r in rows if r["clause"] == c],
                      key=lambda r: -r["trust"])
         n = len(sub)
+        # 봉인에는 서로 다른 세 사유가 있고, 이것을 뭉뚱그리면 안 된다.
+        # "말할 자격이 없다"와 "판단할 표본이 없다"는 전혀 다른 판정이다.
         if n == 0:
-            out[c] = {"n_candidates": 0, "tau": None, "tau_low": None,
-                      "sealed": True, "reason": "보정 분할에 후보 없음"}
+            out[c] = {
+                "n_candidates": 0, "tau": None, "tau_low": None,
+                "sealed": True, "seal_reason": "no_confirmed_mechanism",
+                "reason": "사전 선언 기전 게이트에서 이 조항을 확증한 구조 경보가 "
+                          "없다. 조항 후보가 애초에 기안되지 않으므로 τ 보정 "
+                          "대상이 아니다 — 정밀도가 낮아서 봉인된 것이 아니다",
+            }
             continue
         base = sum(r["truth"] for r in sub) / n
 
@@ -102,12 +109,22 @@ def calibrate(rows, target=TARGET_PRECISION):
             if k >= MIN_ADVANCE_N and prec >= target:
                 best_k, best_prec = k, prec
         if best_k is None:
+            # 후보 자체가 최소 발행 조건에 못 미치면 '정밀도가 낮다'가 아니라
+            # '판정할 검정력이 없다'다. 두 사유를 구분해 보고한다.
+            underpowered = n < MIN_ADVANCE_N
             out[c] = {
                 "n_candidates": n, "base_rate": base, "tau": None,
                 "tau_low": None, "sealed": True,
-                "reason": f"목표 정밀도 {target:.2f} 를 만족하는 임계가 없음 "
-                          f"(최소 발행 {MIN_ADVANCE_N}건 조건). 발행을 봉인하고 "
-                          f"사람검토·기권만 사용한다",
+                "seal_reason": ("underpowered" if underpowered
+                                else "precision_target_unmet"),
+                "reason": (
+                    f"후보 {n}건으로 최소 발행 {MIN_ADVANCE_N}건 조건에 미달한다. "
+                    f"정밀도가 목표에 못 미친다는 증거가 아니라 **판정할 검정력이 "
+                    f"없다**는 뜻이다 (확증 기전이 희소한 데서 온다)"
+                    if underpowered else
+                    f"후보 {n}건으로 검정력은 충분하나 목표 정밀도 {target:.2f} 를 "
+                    f"만족하는 임계가 없다. 발행을 봉인하고 사람검토·기권만 "
+                    f"사용한다 — 이 조항에 대해 말할 자격이 없다는 판정이다"),
             }
             continue
 
@@ -125,10 +142,20 @@ def calibrate(rows, target=TARGET_PRECISION):
         _, lo, hi = wilson(int(round(best_prec * best_k)), best_k)
         out[c] = {"n_candidates": n, "base_rate": base, "tau": float(tau),
                   "tau_low": float(tau_low), "sealed": False,
+                  "seal_reason": None,
                   "advance_n": best_k, "advance_precision": best_prec,
                   "precision_ci": [lo, hi],
                   "lift_vs_base": best_prec / base if base > 0 else None}
     return out
+
+
+def seal_breakdown(res):
+    """봉인 사유별 집계. '2/10'으로 뭉뚱그리지 않기 위한 것."""
+    b = {"issuable": [], "no_confirmed_mechanism": [], "underpowered": [],
+         "precision_target_unmet": []}
+    for c, v in res.items():
+        b["issuable" if not v.get("sealed") else v["seal_reason"]].append(c)
+    return b
 
 
 def main():
@@ -166,11 +193,27 @@ def main():
                   f"{v['advance_precision']:7.3f} "
                   f"{v['lift_vs_base']:6.2f}x  보정 완료")
 
+    bd = seal_breakdown(res)
+    print("\n[봉인 사유 구분 — '10종 중 2종'으로 뭉뚱그리지 않는다]")
+    print(f"  발행 자격 획득           {len(bd['issuable']):2d}종  {bd['issuable']}")
+    print(f"  확증 기전 없음(미기안)   {len(bd['no_confirmed_mechanism']):2d}종  "
+          f"{bd['no_confirmed_mechanism']}")
+    print(f"     └ τ 봉인이 아니라 기전 게이트 상류에서 걸러진 것. 조항 후보가 "
+          f"기안되지 않는다")
+    print(f"  검정력 부족(후보<{MIN_ADVANCE_N})     "
+          f"{len(bd['underpowered']):2d}종  {bd['underpowered']}")
+    print(f"     └ 정밀도가 낮다는 증거가 아니라 판정할 표본이 없다는 뜻")
+    print(f"  목표 정밀도 미달         {len(bd['precision_target_unmet']):2d}종  "
+          f"{bd['precision_target_unmet']}")
+    print(f"     └ 검정력 충분한데 미달 = 진짜 '말할 자격 없음' 판정")
+
     payload = {"target_precision": args.target, "n_calib_trials": len(calib),
                "n_pairs": len(rows), "min_advance_n": MIN_ADVANCE_N,
                "escalate_recall": ESCALATE_RECALL, "per_clause": res,
+               "seal_breakdown": bd,
                "note": "평가 분할을 사용하지 않는다. 학습 분할에서 떼어낸 "
-                       "보정 분할만 사용한다."}
+                       "보정 분할만 사용한다. 봉인 사유 3종을 구분해 보고한다 — "
+                       "확증 기전 없음(미기안) / 검정력 부족 / 목표 정밀도 미달."}
     json.dump(payload, open(OUT, "w", encoding="utf-8"),
               ensure_ascii=False, indent=1)
     print(f"\n결과 저장: {OUT}")

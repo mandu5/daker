@@ -95,6 +95,16 @@ CHECKS = [
      E5["brule_sign_test"]["sign_test_p_two_sided"], 0.0005),
     ("E5 절감 하한(%)", 8.2, E5["saving_range"]["lo"] * 100, 0.15),
     ("E5 절감 상한(%)", 47.0, E5["saving_range"]["hi"] * 100, 0.15),
+    # Δ* 절제. 본문이 "정밀도는 같다"고 적었으므로 두 값의 차가 벌어지면
+    # 본문 서술을 바꿔야 한다.
+    ("Δ* 절제 발행(현행)", 73,
+     E3["delta_star_ablation"]["with_delta_star"]["n_issued"], 0),
+    ("Δ* 절제 발행(절제)", 97,
+     E3["delta_star_ablation"]["without_delta_star"]["n_issued"], 0),
+    ("Δ* 절제 정밀도(현행)", 0.301,
+     E3["delta_star_ablation"]["with_delta_star"]["precision"], 0.0005),
+    ("Δ* 절제 정밀도(절제)", 0.299,
+     E3["delta_star_ablation"]["without_delta_star"]["precision"], 0.0005),
 ]
 
 

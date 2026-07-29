@@ -552,9 +552,14 @@ def fig_selfcorrect():
         kpi("CYP·DDI 정밀도 lift", f"{cyp['precision_lift']:.2f}x",
             f"[{cyp['lift_ci'][0]:.2f}, {cyp['lift_ci'][1]:.2f}]<br>"
             f"<b>신뢰구간이 1을 넘지 않음</b>", OK),
+        # 유의성 문구를 하드코딩하면 라벨러·데이터가 바뀔 때 낡는다.
+        # 실제로 QT 는 라벨러 수정 후 lift 1.09 → 2.93 으로 유의해졌는데
+        # 문구가 '유의하지 않음'으로 남아 CI 와 정면 모순이었다. CI 에서 판정한다.
         kpi("QT·심전도 lift", f"{qt['precision_lift']:.2f}x",
             f"[{qt['lift_ci'][0]:.2f}, {qt['lift_ci'][1]:.2f}]<br>"
-            f"<b>유의하지 않음 — 주장 안 함</b>", "#C98A17"),
+            + (f"<b>신뢰구간이 1을 넘지 않음</b>" if qt['lift_ci'][0] > 1.0
+               else f"<b>유의하지 않음 — 주장 안 함</b>"),
+            OK if qt['lift_ci'][0] > 1.0 else "#C98A17"),
         kpi("음성 대조 발행률", f"{nc['advance_rate']:.4f}",
             f"확증 경보 없는 {nc['n']:,}쌍<br>누출 0건", DET),
     ], gap=6, style="margin-top:8px;")
@@ -611,7 +616,8 @@ def fig_hero():
         f"<div style='display:flex;gap:6px;margin-top:7px;'>"
         f"<div style='flex:1.35;background:{NAVY};color:#fff;border-radius:6px;"
         f"padding:7px 10px;font-size:10.5px;line-height:1.45;'>"
-        f"<b style='font-size:11.5px;'>다른 팀은 조항을 더 잘 만드는 AI를 만듭니다.</b><br>"
+        f"<b style='font-size:11.5px;white-space:nowrap;'>다른 팀은 조항을 더 잘 "
+        f"만드는 AI를 만듭니다.</b><br>"
         f"먹줄은 <b>이 조항이 정말 이 분자 때문인지</b> 따지고, "
         f"근거가 부족하면 <b>말하지 않습니다.</b></div>"
         f"<div style='flex:1;border:1.4px solid {OK};border-radius:6px;"

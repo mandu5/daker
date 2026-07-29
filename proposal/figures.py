@@ -4,7 +4,7 @@
 
 색 규약 (제안서 전체에서 동일)
     청색  = 결정론 도구가 판정하는 지점 (RDKit·규칙엔진·scipy)
-    회색  = LLM 이 관여하는 지점 (텍스트 추출·모순 탐지·서술)
+    회색  = LLM 이 관여하는 유일 지점 (자유서술 → 구조화 추출)
     붉은색 = 되돌아가는 화살표(반증 기각) · 기권
 """
 
@@ -75,7 +75,7 @@ def fig_architecture():
         agent("②", "SCRIBE 기안관", "리스크 × 맥락 → 조항 후보",
               "조항에 템플릿 기저확률 p_base 부착 → 증분 Δ 산출 "
               "&nbsp;|&nbsp; <b>4-튜플로만 발행</b>: (근거 span, 유발 리스크, 봉인된 반증조건, 신뢰도) "
-              f"&nbsp;|&nbsp; <span style='color:{LLM};'>LLM: 자유문 → 구조화 추출 · 조항 간 모순 탐지</span>"),
+              f"&nbsp;|&nbsp; <span style='color:{LLM};'>LLM 관여 유일 지점: 자유문 → 구조화 추출(모순 탐지는 결정론)</span>"),
         flow("조항 후보 + Δ"),
         agent("③", "ACTUARY 계량관", "용량 · 검정력 · 모집",
               "NOAEL→HED→MRSD · 3+3 vs BLRM 몬테카를로 "
@@ -115,7 +115,7 @@ def fig_architecture():
         f"gap:14px;justify-content:center;'>"
         f"<span><span style='color:{DET};'>■</span> 결정론 도구가 판정 "
         f"(숫자는 LLM 손에 없다)</span>"
-        f"<span><span style='color:{LLM};'>■</span> LLM 관여 지점 (3곳뿐, 각각 ablation)</span>"
+        f"<span><span style='color:{LLM};'>■</span> LLM 관여 지점 (1곳 — 자유서술 추출)</span>"
         f"<span><span style='color:{REJ};'>■</span> 반증 기각 · 기권</span></div>"
     )
     F.render(spine + back + legend, os.path.join(OUT, "fig1_architecture.png"),
@@ -364,7 +364,7 @@ def fig_eval():
         f"B-RULE — LLM 0개, 토큰 0</div>"
         f"<div style='font-size:9.6px;color:#333;margin-top:3px;line-height:1.45;'>"
         f"순수 규칙 엔진. <b>에이전트가 이것을 얼마나 이겼는지</b>를 정직하게 보고한다. "
-        f"작으면 작다고 쓴다. LLM 이 필요한 지점 3곳을 각각 ablation 으로 분리 측정한다."
+        f"작으면 작다고 쓴다. 핵심 장치(Δ*)는 절제 실험으로 기여를 분리 측정한다."
         f"</div></div></div>")
 
     limit = (
@@ -444,13 +444,30 @@ def fig_run():
 
     n = {k: sum(1 for c in rec["clauses"] if c["decision"] == k)
          for k in ("advance", "escalate", "abstain")}
+    # Δ* 콜아웃은 이 시연 분자에서 **실제로** 물성 몫이 가장 많이 제거된 조항을
+    # 골라 그 값으로 쓴다. 하드코딩하면 시연 분자가 바뀔 때 낡는다.
+    KO_C = {"QT_ECG": "QT", "CYP_DDI": "CYP·DDI", "FOOD_EFFECT": "음식효과",
+            "HEPATIC": "간기능", "GI_IRRITATION": "위장관"}
+    trig = [c for c in rec["clauses"]
+            if c.get("trigger_risks") and c.get("delta_star") is not None
+            and c["delta"]]
+    pick = min(trig, key=lambda c: c["delta_star"] / c["delta"]) if trig else None
+    if pick:
+        share = pick["delta_star"] / pick["delta"]
+        removed = pick["delta"] - pick["delta_star"]
+        cn = KO_C.get(pick["clause_type"], pick["clause_type"])
+        callout = (
+            f"<b>Δ* 가 물성 몫을 떼어냈다.</b> {cn} 조항의 원시 증분 "
+            f"{pick['delta']:+.4f} 중 구조에 귀속되는 몫은 "
+            f"<b>{pick['delta_star']:+.4f}({share:.0%})</b>, 나머지 "
+            f"{removed:+.4f}({1-share:.0%})는 물성 매칭 decoy 12개에서도 나왔다 — "
+            f"구조 귀속에서 제외된다. QT는 100%가 구조 귀속이라 온전히 남는다.")
+    else:
+        callout = "<b>Δ* 구조 귀속 검정</b>이 모든 트리거 조항에 적용된다."
     summary = (
         f"<div style='display:flex;gap:7px;margin-top:8px;'>"
         f"<div style='flex:1.5;border-left:4px solid {REJ};background:#FDF4F6;"
-        f"padding:7px 10px;font-size:10px;line-height:1.45;'>"
-        f"<b>Δ* 가 실제로 걸러냈다.</b> QT 조항의 원시 증분 +0.178 중 "
-        f"구조에 귀속되는 몫은 <b>+0.048(27%)</b> 뿐이었다. 나머지 73%는 "
-        f"물성 매칭 decoy 12개에서도 그대로 나왔다 — 즉 구조 때문이 아니다.</div>"
+        f"padding:7px 10px;font-size:10px;line-height:1.45;'>{callout}</div>"
         f"<div style='flex:1;border:1.3px solid {LINE};border-radius:6px;"
         f"padding:7px 10px;font-size:10px;line-height:1.5;'>"
         f"발행 <b>{n['advance']}</b> · 사람검토 <b style='color:#C98A17;'>"

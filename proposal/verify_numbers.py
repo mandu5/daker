@@ -29,6 +29,13 @@ E5 = json.load(open(os.path.join(RES, "e5_mechanism_power.json"),
                     encoding="utf-8"))
 
 
+def RUN_C(clause, field):
+    for c in RUN["clauses"]:
+        if c["clause_type"] == clause:
+            return c[field]
+    return None
+
+
 def gate(name):
     g = S2C["mechanism_gate"]
     return {(r["flag"], r["clause"]): r for r in g[name]}
@@ -105,11 +112,20 @@ CHECKS = [
      E3["delta_star_ablation"]["with_delta_star"]["precision"], 0.0005),
     ("Δ* 절제 정밀도(절제)", 0.299,
      E3["delta_star_ablation"]["without_delta_star"]["precision"], 0.0005),
+    # 도식 콜아웃이 쓰는 시연 분자 귀속% (물성 몫이 가장 많이 제거된 조항).
+    # 이 값이 달라지면 도식 콜아웃 문구도 자동으로 바뀐다 — 정합 감시용.
+    ("시연 FOOD_EFFECT 귀속%", 81,
+     round(RUN_C("FOOD_EFFECT", "delta_star") / RUN_C("FOOD_EFFECT", "delta") * 100),
+     0),
 ]
 
 
 def check_delta_star():
-    """시연 분자의 Δ* 구조 귀속분 27% 주장을 확인."""
+    """시연 분자의 QT 구조 귀속분이 100%(Δ*=Δ)임을 확인.
+
+    도식 콜아웃은 물성 몫이 가장 많이 제거된 조항(FOOD_EFFECT 81%)을 자동으로
+    골라 쓴다. QT는 100% 구조 귀속이라 온전히 남는다.
+    """
     for c in RUN["clauses"]:
         if c["clause_type"] == "QT_ECG":
             share = c["delta_star"] / c["delta"] if c["delta"] else None

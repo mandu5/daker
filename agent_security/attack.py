@@ -260,18 +260,21 @@ class AttackAlgorithm(AttackAlgorithmBase):
 
         # ---- PROBE: measure which families work on THIS model, and their value.
         family_stats: list[tuple[float, int, int]] = []  # (value_per_s, sev_per_inst, fam_i)
-        for fam_i, (builder, k, _label) in enumerate(_FAMILIES):
+        probe_report: dict[str, dict[str, float]] = {}
+        for fam_i, (builder, k, label) in enumerate(_FAMILIES):
             if time_left() <= 0:
                 break
             total_sev = 0
             total_t = 0.0
             hits = 0
+            attempts = 0
             for _ in range(self._probe_per_family):
                 if time_left() <= 0:
                     break
                 idx = family_index[fam_i]
                 family_index[fam_i] += 1
                 messages = builder(idx, k)
+                attempts += 1
                 try:
                     sev, cell_hash, dt = self._evaluate(env, messages, hops)
                 except Exception:
@@ -289,6 +292,12 @@ class AttackAlgorithm(AttackAlgorithmBase):
                         kept.append(AttackCandidate.from_messages(messages))
                         seen_cells.add(cell_hash)
                         replay_estimate_s += est
+            probe_report[label] = {
+                "attempts": attempts,
+                "hits": hits,
+                "severity_per_hit": round(total_sev / hits, 1) if hits else 0.0,
+                "avg_seconds": round(total_t / attempts, 3) if attempts else 0.0,
+            }
             if hits > 0 and total_t > 0:
                 value_per_s = total_sev / total_t
                 family_stats.append((value_per_s, total_sev // max(1, hits), fam_i))
@@ -343,6 +352,7 @@ class AttackAlgorithm(AttackAlgorithmBase):
             "replay_estimate_s": round(replay_estimate_s, 2),
             "gen_elapsed_s": round(time.monotonic() - start, 2),
             "working_families": [_FAMILIES[i][2] for i in working],
+            "probe_report": probe_report,
         }
         return kept
 

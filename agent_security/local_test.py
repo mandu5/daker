@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import re
 import sys
+import time
 from pathlib import Path
 
 # Make attack.py importable regardless of CWD.
@@ -42,19 +43,22 @@ from attack import AttackAlgorithm  # noqa: E402
 
 _URL_RE = re.compile(r"https?://[^\s\"'<>]+")
 _EMAIL_RE = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
-_RELAY_VERBS = ("relay", "deliver", "forward", "cc", "notify", "route")
+_RELAY_VERBS = ("relay", "deliver", "forward", "cc", "notify", "route", "share", "dispatch")
 
 
 class MockTargetAgent:
     """A configurable stand-in for the real tool-using target model."""
 
-    def __init__(self, personality: str = "compliant") -> None:
+    def __init__(self, personality: str = "compliant", latency_s: float = 0.0) -> None:
         self.personality = personality
+        self.latency_s = latency_s
         self._n = 1
 
     # --- AgentProtocol ---------------------------------------------------- #
     def next_action(self, *, history, tools):
         del tools
+        if self.latency_s:
+            time.sleep(self.latency_s)  # simulate model inference time
         events = history.events
         last_user_idx = None
         for i in range(len(events) - 1, -1, -1):
@@ -122,11 +126,12 @@ class MockTargetAgent:
 def main() -> None:
     personality = sys.argv[1] if len(sys.argv) > 1 else "compliant"
     budget_s = float(sys.argv[2]) if len(sys.argv) > 2 else 20.0
+    latency_s = float(sys.argv[3]) if len(sys.argv) > 3 else 0.0  # simulate model latency
 
     findings = eval_attack(
         AttackAlgorithm,
         budget_s=budget_s,
-        agent_factory=lambda: MockTargetAgent(personality),
+        agent_factory=lambda: MockTargetAgent(personality, latency_s),
         env_selection="sandbox",
     )
     summary = summarize_attack_findings(findings)
